@@ -1,0 +1,1 @@
+import PageIntro from '../../components/common/SectionTitle'; export default function About(){return <PageIntro eyebrow="ABOUT THE COMPANY" title="Built on technical clarity and accountable execution.">Our story, vision and mission will load from the CMS API.</PageIntro>}

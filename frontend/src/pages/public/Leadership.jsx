@@ -1,0 +1,1 @@
+import PageIntro from '../../components/common/SectionTitle'; export default function Leadership(){return <PageIntro eyebrow="LEADERSHIP" title="The people accountable for your project.">Team profiles will be maintained through the CMS.</PageIntro>}

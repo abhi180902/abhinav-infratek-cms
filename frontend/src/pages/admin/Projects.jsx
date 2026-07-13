@@ -1,0 +1,1 @@
+import P from '../../components/admin/AdminPagePlaceholder'; export default function Projects(){return <P title="Projects" description="Create, edit, archive and search projects with Cloudinary image and PDF uploads."/>}

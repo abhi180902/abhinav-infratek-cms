@@ -1,0 +1,1 @@
+import P from '../../components/admin/AdminPagePlaceholder'; export default function Settings(){return <P title="Site Settings" description="Manage contact information, social links and SEO metadata for abhinavinfratek.in."/>}

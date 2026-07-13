@@ -1,0 +1,2 @@
+import Button from '../../components/common/Button'
+export default function Login(){return <main className="grid min-h-screen place-items-center bg-slate-950 p-5"><form className="w-full max-w-md rounded-2xl bg-white p-8"><p className="font-display text-3xl">Admin Login</p><p className="mt-2 text-sm text-slate-500">Abhinav Infratek CMS</p><input className="mt-7 w-full rounded-lg border p-3" placeholder="Email"/><input className="mt-4 w-full rounded-lg border p-3" placeholder="Password" type="password"/><Button className="mt-6 w-full">Sign In</Button></form></main>}
