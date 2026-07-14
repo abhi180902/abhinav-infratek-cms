@@ -1,1 +1,36 @@
-export default function AdminPagePlaceholder({title,description}){return <section><p className="text-xs font-bold tracking-[.2em] text-brand">CONTENT MANAGEMENT</p><h1 className="mt-2 font-display text-4xl">{title}</h1><div className="mt-8 rounded-xl border border-dashed border-slate-300 bg-white p-8 text-slate-600">{description}<p className="mt-2 text-sm">Ready for its authenticated API-backed management interface.</p></div></section>}
+import { Plus } from 'lucide-react'
+import EmptyState from './EmptyState'
+import PageHeader from './PageHeader'
+import TableToolbar from './TableToolbar'
+
+export default function AdminPagePlaceholder({
+  addLabel,
+  breadcrumb = 'Content Management',
+  description,
+  emptyDescription,
+  emptyIcon,
+  emptyTitle,
+  searchPlaceholder,
+  title,
+}) {
+  return (
+    <section>
+      <PageHeader
+        breadcrumb={breadcrumb}
+        title={title}
+        description={description}
+        action={
+          <button className="admin-primary-button" type="button">
+            <Plus aria-hidden="true" size={18} />
+            {addLabel}
+          </button>
+        }
+      />
+
+      <article className="admin-table-card">
+        <TableToolbar addLabel={addLabel} searchPlaceholder={searchPlaceholder} />
+        <EmptyState title={emptyTitle} description={emptyDescription} icon={emptyIcon} />
+      </article>
+    </section>
+  )
+}
