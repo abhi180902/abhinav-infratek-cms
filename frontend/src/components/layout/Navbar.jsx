@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import logo from '../../assets/images/abhinav-infratek-logo.png'
+import logo from '../../assets/images/company-logo.png'
+import { settings } from '../../data/settings'
 
 const navLinks = [
   { label: 'About', target: 'about' },
@@ -48,8 +49,8 @@ export default function Navbar() {
         <button className="brand-link" type="button" onClick={() => scrollToSection('top')} aria-label="Go to top">
           <img className="brand-logo" src={logo} alt="Abhinav Infratek logo" />
           <span className="brand-copy">
-            <span className="brand-name">ABHINAV INFRATEK</span>
-            <span className="brand-tagline">Engineers & Architects</span>
+            <span className="brand-name">{settings.companyName}</span>
+            <span className="brand-tagline">{settings.companyTagline}</span>
           </span>
         </button>
 

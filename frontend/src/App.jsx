@@ -3,6 +3,9 @@ import Hero from './components/home/Hero'
 import About from './components/home/About'
 import Services from './components/home/Services'
 import Projects from './components/home/Projects'
+import Leadership from './components/home/Leadership'
+import Contact from './components/home/Contact'
+import Footer from './components/layout/Footer'
 
 export default function App() {
   return (
@@ -13,7 +16,10 @@ export default function App() {
         <About />
         <Services />
         <Projects />
+        <Leadership />
+        <Contact />
       </main>
+      <Footer />
     </div>
   )
 }

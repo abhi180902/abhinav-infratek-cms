@@ -14,21 +14,21 @@ export default function About() {
 
         <div className="about-content">
           <p className="section-kicker">About Abhinav Infratek</p>
-          <h2>Practical engineering, thoughtful architecture, reliable execution.</h2>
+          <h2>Engineering excellence with architectural planning and trusted execution.</h2>
           <p className="about-intro">
-            Abhinav Infratek partners with clients across residential, commercial, industrial, and infrastructure
-            projects, bringing together planning discipline, site coordination, and a clear commitment to durable
-            construction outcomes.
+            Abhinav Infratek is a Ranebennur-based engineering and architecture firm focused on residential projects,
+            commercial spaces, interior solutions, and turnkey construction. The team combines modern planning,
+            structural thinking, estimation clarity, and hands-on supervision to deliver work built on quality and trust.
           </p>
 
           <div className="about-principles">
             <article>
               <span>Vision</span>
-              <p>To be a trusted regional partner for purposeful spaces and infrastructure that stand the test of time.</p>
+              <p>To create modern, durable, and practical spaces that improve how people live, work, and build.</p>
             </article>
             <article>
               <span>Mission</span>
-              <p>To deliver every project with technical clarity, transparent communication, and accountable execution.</p>
+              <p>To deliver planning, consultancy, interiors, approvals, and civil work with transparency and care.</p>
             </article>
           </div>
         </div>

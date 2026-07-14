@@ -1,4 +1,5 @@
 import heroImage from '../../assets/images/hero.png'
+import { settings } from '../../data/settings'
 
 export default function Hero() {
   const scrollToSection = (target) => {
@@ -18,19 +19,19 @@ export default function Hero() {
       <div className="hero-content">
         <div className="container">
           <div className="hero-copy">
-            <p className="hero-kicker">Engineers & Architects - Karnataka</p>
+            <p className="hero-kicker">{settings.companyTagline} - {settings.location}</p>
             <h1 className="hero-title">
-              Building precise spaces for <span>lasting progress.</span>
+              Modern construction shaped by <span>engineering clarity.</span>
             </h1>
             <p className="hero-subtitle">
-              Abhinav Infratek delivers dependable architecture, engineering, and infrastructure execution with clarity,
-              craft, and accountability from concept to completion.
+              Abhinav Infratek delivers building planning, architectural consultancy, interiors, structural guidance,
+              and turnkey civil execution for residential and commercial projects.
             </p>
             <div className="hero-actions" aria-label="Hero actions">
               <button className="site-button site-button--light" type="button" onClick={() => scrollToSection('projects')}>
                 View Our Work
               </button>
-              <button className="site-button site-button--outline" type="button" onClick={() => scrollToSection('contact')}>
+              <button className="site-button site-button--primary" type="button" onClick={() => scrollToSection('contact')}>
                 Start a Project
               </button>
             </div>

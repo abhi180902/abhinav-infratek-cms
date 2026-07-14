@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react'
+import SectionCarousel from '../common/SectionCarousel'
 import { projects } from '../../data/projects'
 
 const filters = ['All', 'Residential', 'Commercial', 'Industrial', 'Infrastructure']
+const projectVisibleCounts = { desktop: 3, tablet: 2, mobile: 1 }
 
 export default function Projects() {
   const [activeFilter, setActiveFilter] = useState('All')
@@ -16,13 +18,14 @@ export default function Projects() {
 
   return (
     <section className="projects-section section-block" id="projects">
-      <div className="container">
-        <div className="projects-heading">
-          <div className="section-heading">
-            <p className="section-kicker">Projects</p>
-            <h2>Selected work across built environments and infrastructure.</h2>
-          </div>
+      <div className="container carousel-container">
+        <div className="section-heading section-heading--center">
+          <h2>
+            Our <span>Projects</span>
+          </h2>
+        </div>
 
+        <div className="projects-heading">
           <div className="filter-buttons" aria-label="Filter projects by category">
             {filters.map((filter) => (
               <button
@@ -38,29 +41,30 @@ export default function Projects() {
           </div>
         </div>
 
-        <div className="projects-grid">
-          {filteredProjects.map((project) => (
-            <article className="project-card" key={project.id}>
+        <SectionCarousel
+          key={activeFilter}
+          className="projects-carousel"
+          controlsClassName="project-carousel-controls"
+          controlsLabel="Project carousel controls"
+          visibleCounts={projectVisibleCounts}
+          items={filteredProjects}
+          resetKey={activeFilter}
+          getItemKey={(project) => project.id}
+          renderItem={(project) => (
+            <article className="project-card">
               <div className="project-image">
                 <img src={project.image} alt={project.title} />
-                <span>{project.category}</span>
               </div>
               <div className="project-card-body">
+                <span className="project-category">{project.category}</span>
                 <h3>{project.title}</h3>
-                <dl>
-                  <div>
-                    <dt>Location</dt>
-                    <dd>{project.location}</dd>
-                  </div>
-                  <div>
-                    <dt>Year</dt>
-                    <dd>{project.year}</dd>
-                  </div>
-                </dl>
+                <p className="project-description">{project.description}</p>
+                <p className="project-meta">{project.location}</p>
+                <p className="project-year">{project.year}</p>
               </div>
             </article>
-          ))}
-        </div>
+          )}
+        />
       </div>
     </section>
   )

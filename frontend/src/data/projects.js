@@ -6,7 +6,8 @@ export const projects = [
     title: 'Urban Residence',
     category: 'Residential',
     image: heroImage,
-    location: 'Bengaluru, Karnataka',
+    description: 'Contemporary residential planning with practical detailing and site-focused execution.',
+    location: 'Ranebennur, Karnataka',
     year: '2025',
   },
   {
@@ -14,7 +15,8 @@ export const projects = [
     title: 'Premium Villa Cluster',
     category: 'Residential',
     image: heroImage,
-    location: 'Mysuru, Karnataka',
+    description: 'Premium villa planning with elevation concepts, estimation, and quality supervision.',
+    location: 'Haveri, Karnataka',
     year: '2024',
   },
   {
@@ -22,7 +24,8 @@ export const projects = [
     title: 'Business Center Fitout',
     category: 'Commercial',
     image: heroImage,
-    location: 'Hubballi, Karnataka',
+    description: 'Functional commercial space planning with structural coordination and turnkey support.',
+    location: 'Ranebennur, Karnataka',
     year: '2025',
   },
   {
@@ -30,7 +33,8 @@ export const projects = [
     title: 'Retail Frontage Upgrade',
     category: 'Commercial',
     image: heroImage,
-    location: 'Mangaluru, Karnataka',
+    description: 'Modern retail frontage improvement with architectural detailing and civil execution.',
+    location: 'Haveri, Karnataka',
     year: '2023',
   },
   {
@@ -38,7 +42,8 @@ export const projects = [
     title: 'Fabrication Facility',
     category: 'Industrial',
     image: heroImage,
-    location: 'Belagavi, Karnataka',
+    description: 'Industrial facility execution with durable civil work and supervision controls.',
+    location: 'Ranebennur, Karnataka',
     year: '2024',
   },
   {
@@ -46,7 +51,8 @@ export const projects = [
     title: 'Warehouse Expansion',
     category: 'Industrial',
     image: heroImage,
-    location: 'Tumakuru, Karnataka',
+    description: 'Warehouse expansion with efficient planning, valuation support, and site management.',
+    location: 'Byadagi, Karnataka',
     year: '2023',
   },
   {
@@ -54,7 +60,8 @@ export const projects = [
     title: 'Civic Roadworks',
     category: 'Infrastructure',
     image: heroImage,
-    location: 'Dharwad, Karnataka',
+    description: 'Roadwork execution with disciplined construction tracking and safety-focused delivery.',
+    location: 'Ranebennur, Karnataka',
     year: '2025',
   },
   {
@@ -62,7 +69,8 @@ export const projects = [
     title: 'Stormwater Upgrade',
     category: 'Infrastructure',
     image: heroImage,
-    location: 'Shivamogga, Karnataka',
+    description: 'Drainage and stormwater improvement work with reliable civil supervision.',
+    location: 'Haveri, Karnataka',
     year: '2024',
   },
 ]
