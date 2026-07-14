@@ -1,1 +1,40 @@
-export default function Services(){return <section id="services" className="scroll-mt-20 bg-slate-100 py-20"><div className="mx-auto max-w-7xl px-5"><p className="text-xs font-semibold tracking-[.32em] text-brand">SERVICES</p><h2 className="mt-4 font-display text-4xl md:text-5xl">Construction capabilities from concept to completion.</h2><div className="mt-10 grid gap-px overflow-hidden border bg-slate-300 sm:grid-cols-2 lg:grid-cols-4"><div className="bg-white p-7"><p className="font-display text-xl">API-powered services</p><p className="mt-3 text-sm leading-6 text-slate-600">Cards will render from <code>GET /api/services</code>.</p></div><div className="bg-white p-7"><p className="font-display text-xl">Planning & design</p><p className="mt-3 text-sm leading-6 text-slate-600">Content managed in the admin dashboard.</p></div><div className="bg-white p-7"><p className="font-display text-xl">Project execution</p><p className="mt-3 text-sm leading-6 text-slate-600">Built to support dynamic service details.</p></div><div className="bg-white p-7"><p className="font-display text-xl">Consultancy</p><p className="mt-3 text-sm leading-6 text-slate-600">No permanent public service data is hardcoded.</p></div></div></div></section>}
+import { BriefcaseBusiness, Compass, Grid2X2, HardHat, Home, Layers3 } from 'lucide-react'
+import { services } from '../../data/services'
+
+const serviceIcons = {
+  architecture: Compass,
+  residential: Home,
+  commercial: BriefcaseBusiness,
+  industrial: HardHat,
+  infrastructure: Grid2X2,
+  consulting: Layers3,
+}
+
+export default function Services() {
+  return (
+    <section className="services-section section-block" id="services">
+      <div className="container">
+        <div className="section-heading">
+          <p className="section-kicker">Services</p>
+          <h2>Integrated capabilities for planning, construction, and delivery.</h2>
+        </div>
+
+        <div className="services-grid">
+          {services.map((service) => {
+            const Icon = serviceIcons[service.icon]
+
+            return (
+              <article className="service-card" key={service.id}>
+                <span className="service-icon" aria-hidden="true">
+                  <Icon />
+                </span>
+                <h3>{service.title}</h3>
+                <p>{service.description}</p>
+              </article>
+            )
+          })}
+        </div>
+      </div>
+    </section>
+  )
+}

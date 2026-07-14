@@ -1,2 +1,67 @@
-import Button from '../common/Button'
-export default function Projects(){return <section id="projects" className="scroll-mt-20 bg-slate-950 py-20 text-white"><div className="mx-auto max-w-7xl px-5"><p className="text-xs font-semibold tracking-[.32em] text-gold">PROJECTS</p><div className="mt-4 flex flex-wrap items-end justify-between gap-5"><h2 className="font-display text-4xl md:text-5xl">A portfolio of built work.</h2><Button href="#contact" className="bg-gold text-slate-950 hover:bg-amber-400">Discuss Your Project</Button></div><div className="mt-10 grid gap-5 md:grid-cols-3">{['Project gallery','Image + PDF brochure','Category filtering'].map((label,index)=><article className="min-h-64 border border-white/15 bg-white/5 p-7" key={label}><p className="text-xs tracking-[.2em] text-gold">0{index+1}</p><h3 className="mt-16 font-display text-2xl">{label}</h3><p className="mt-3 text-sm leading-6 text-slate-300">Project data will load from <code>GET /api/projects</code>, including Cloudinary URLs.</p></article>)}</div></div></section>}
+import { useMemo, useState } from 'react'
+import { projects } from '../../data/projects'
+
+const filters = ['All', 'Residential', 'Commercial', 'Industrial', 'Infrastructure']
+
+export default function Projects() {
+  const [activeFilter, setActiveFilter] = useState('All')
+
+  const filteredProjects = useMemo(() => {
+    if (activeFilter === 'All') {
+      return projects
+    }
+
+    return projects.filter((project) => project.category === activeFilter)
+  }, [activeFilter])
+
+  return (
+    <section className="projects-section section-block" id="projects">
+      <div className="container">
+        <div className="projects-heading">
+          <div className="section-heading">
+            <p className="section-kicker">Projects</p>
+            <h2>Selected work across built environments and infrastructure.</h2>
+          </div>
+
+          <div className="filter-buttons" aria-label="Filter projects by category">
+            {filters.map((filter) => (
+              <button
+                className={`filter-button ${activeFilter === filter ? 'is-active' : ''}`}
+                type="button"
+                key={filter}
+                onClick={() => setActiveFilter(filter)}
+                aria-pressed={activeFilter === filter}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="projects-grid">
+          {filteredProjects.map((project) => (
+            <article className="project-card" key={project.id}>
+              <div className="project-image">
+                <img src={project.image} alt={project.title} />
+                <span>{project.category}</span>
+              </div>
+              <div className="project-card-body">
+                <h3>{project.title}</h3>
+                <dl>
+                  <div>
+                    <dt>Location</dt>
+                    <dd>{project.location}</dd>
+                  </div>
+                  <div>
+                    <dt>Year</dt>
+                    <dd>{project.year}</dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

@@ -1,6 +1,19 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
-import PublicLayout from './layouts/PublicLayout'
-import AdminLayout from './layouts/AdminLayout'
-import Home from './pages/public/Home'
-import Login from './pages/auth/Login'; import Dashboard from './pages/admin/Dashboard'; import AdminProjects from './pages/admin/Projects'; import AdminServices from './pages/admin/Services'; import Gallery from './pages/admin/Gallery'; import Team from './pages/admin/Leadership'; import Testimonials from './pages/admin/Testimonials'; import Messages from './pages/admin/Enquiries'; import Settings from './pages/admin/Settings'
-export default function App() { return <Routes><Route element={<PublicLayout/>}><Route path="/" element={<Home/>}/></Route><Route path="/login" element={<Login/>}/><Route path="/admin/login" element={<Navigate to="/login" replace/>}/><Route path="/admin" element={<AdminLayout/>}><Route index element={<Dashboard/>}/><Route path="projects" element={<AdminProjects/>}/><Route path="services" element={<AdminServices/>}/><Route path="gallery" element={<Gallery/>}/><Route path="team" element={<Team/>}/><Route path="testimonials" element={<Testimonials/>}/><Route path="messages" element={<Messages/>}/><Route path="settings" element={<Settings/>}/></Route><Route path="*" element={<Navigate to="/" replace/>}/></Routes> }
+import Navbar from './components/layout/Navbar'
+import Hero from './components/home/Hero'
+import About from './components/home/About'
+import Services from './components/home/Services'
+import Projects from './components/home/Projects'
+
+export default function App() {
+  return (
+    <div className="site-shell">
+      <Navbar />
+      <main>
+        <Hero />
+        <About />
+        <Services />
+        <Projects />
+      </main>
+    </div>
+  )
+}

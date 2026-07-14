@@ -1,1 +1,38 @@
-export default function About(){return <section id="about" className="scroll-mt-20 mx-auto grid max-w-7xl gap-10 px-5 py-20 md:grid-cols-2"><div><p className="text-xs font-semibold tracking-[.32em] text-brand">ABOUT THE COMPANY</p><h2 className="mt-4 font-display text-4xl leading-tight md:text-5xl">Technically sound work, communicated clearly.</h2></div><div className="space-y-6 text-lg leading-8 text-slate-600"><p>The company story, vision, mission and experience are managed from Site Settings and loaded through <code>GET /api/settings</code>.</p><div className="grid grid-cols-2 gap-4 border-t pt-6"><p><span className="block font-display text-3xl text-brand">Vision</span><span className="text-sm">A trusted regional infrastructure partner.</span></p><p><span className="block font-display text-3xl text-brand">Mission</span><span className="text-sm">Clear, safe and accountable delivery.</span></p></div></div></section>}
+import heroImage from '../../assets/images/hero.png'
+
+export default function About() {
+  return (
+    <section className="about-section section-block" id="about">
+      <div className="container about-grid">
+        <div className="about-media">
+          <img src={heroImage} alt="Abhinav Infratek construction and infrastructure work" />
+          <div className="experience-card" aria-label="Company experience">
+            <strong>12+</strong>
+            <span>Years of trusted project delivery</span>
+          </div>
+        </div>
+
+        <div className="about-content">
+          <p className="section-kicker">About Abhinav Infratek</p>
+          <h2>Practical engineering, thoughtful architecture, reliable execution.</h2>
+          <p className="about-intro">
+            Abhinav Infratek partners with clients across residential, commercial, industrial, and infrastructure
+            projects, bringing together planning discipline, site coordination, and a clear commitment to durable
+            construction outcomes.
+          </p>
+
+          <div className="about-principles">
+            <article>
+              <span>Vision</span>
+              <p>To be a trusted regional partner for purposeful spaces and infrastructure that stand the test of time.</p>
+            </article>
+            <article>
+              <span>Mission</span>
+              <p>To deliver every project with technical clarity, transparent communication, and accountable execution.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

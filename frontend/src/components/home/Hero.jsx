@@ -1,2 +1,47 @@
-import Button from '../common/Button'
-export default function Hero(){return <section className="relative overflow-hidden bg-slate-950 px-5 py-28 text-white md:py-40"><div className="absolute inset-0 opacity-30 [background:radial-gradient(circle_at_80%_25%,#d2a84e_0,transparent_25%),linear-gradient(120deg,#0f172a_0%,#1e293b_55%,#111827_100%)]"/><div className="relative mx-auto max-w-7xl"><p className="text-xs font-semibold tracking-[.32em] text-gold">ENGINEERS & ARCHITECTS - KARNATAKA</p><h1 className="mt-5 max-w-4xl font-display text-5xl leading-[1.04] md:text-7xl">Precise execution.<br/><span className="text-gold">Long-lasting infrastructure.</span></h1><p className="mt-7 max-w-2xl text-lg leading-8 text-slate-300">A CMS-managed introduction will appear here, setting the standard for quality, transparency and dependable delivery.</p><div className="mt-9 flex flex-wrap gap-4"><Button href="#projects" className="bg-gold text-slate-950 hover:bg-amber-400">View Our Work</Button><Button href="#contact" className="border border-white bg-transparent hover:bg-white hover:text-slate-950">Start a Conversation</Button></div></div></section>}
+import heroImage from '../../assets/images/hero.png'
+
+export default function Hero() {
+  const scrollToSection = (target) => {
+    const section = document.getElementById(target)
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  return (
+    <section className="hero-section" id="top" aria-label="Abhinav Infratek introduction">
+      <picture className="hero-background">
+        <img src={heroImage} alt="Modern infrastructure project by Abhinav Infratek" />
+      </picture>
+      <div className="hero-overlay" aria-hidden="true" />
+
+      <div className="hero-content">
+        <div className="container">
+          <div className="hero-copy">
+            <p className="hero-kicker">Engineers & Architects - Karnataka</p>
+            <h1 className="hero-title">
+              Building precise spaces for <span>lasting progress.</span>
+            </h1>
+            <p className="hero-subtitle">
+              Abhinav Infratek delivers dependable architecture, engineering, and infrastructure execution with clarity,
+              craft, and accountability from concept to completion.
+            </p>
+            <div className="hero-actions" aria-label="Hero actions">
+              <button className="site-button site-button--light" type="button" onClick={() => scrollToSection('projects')}>
+                View Our Work
+              </button>
+              <button className="site-button site-button--outline" type="button" onClick={() => scrollToSection('contact')}>
+                Start a Project
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button className="scroll-indicator" type="button" onClick={() => scrollToSection('projects')}>
+        <span className="scroll-indicator-mark" aria-hidden="true" />
+        <span>Scroll</span>
+      </button>
+    </section>
+  )
+}

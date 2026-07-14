@@ -1,0 +1,68 @@
+import heroImage from '../assets/images/hero.png'
+
+export const projects = [
+  {
+    id: 'urban-residence',
+    title: 'Urban Residence',
+    category: 'Residential',
+    image: heroImage,
+    location: 'Bengaluru, Karnataka',
+    year: '2025',
+  },
+  {
+    id: 'premium-villa-cluster',
+    title: 'Premium Villa Cluster',
+    category: 'Residential',
+    image: heroImage,
+    location: 'Mysuru, Karnataka',
+    year: '2024',
+  },
+  {
+    id: 'business-center',
+    title: 'Business Center Fitout',
+    category: 'Commercial',
+    image: heroImage,
+    location: 'Hubballi, Karnataka',
+    year: '2025',
+  },
+  {
+    id: 'retail-frontage',
+    title: 'Retail Frontage Upgrade',
+    category: 'Commercial',
+    image: heroImage,
+    location: 'Mangaluru, Karnataka',
+    year: '2023',
+  },
+  {
+    id: 'fabrication-facility',
+    title: 'Fabrication Facility',
+    category: 'Industrial',
+    image: heroImage,
+    location: 'Belagavi, Karnataka',
+    year: '2024',
+  },
+  {
+    id: 'warehouse-expansion',
+    title: 'Warehouse Expansion',
+    category: 'Industrial',
+    image: heroImage,
+    location: 'Tumakuru, Karnataka',
+    year: '2023',
+  },
+  {
+    id: 'civic-roadworks',
+    title: 'Civic Roadworks',
+    category: 'Infrastructure',
+    image: heroImage,
+    location: 'Dharwad, Karnataka',
+    year: '2025',
+  },
+  {
+    id: 'stormwater-upgrade',
+    title: 'Stormwater Upgrade',
+    category: 'Infrastructure',
+    image: heroImage,
+    location: 'Shivamogga, Karnataka',
+    year: '2024',
+  },
+]
