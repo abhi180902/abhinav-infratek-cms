@@ -1,22 +1,22 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AdminLayout from '../layouts/AdminLayout'
 import About from '../components/home/About'
+import ClientReviews from '../components/home/ClientReviews'
 import Contact from '../components/home/Contact'
 import Footer from '../components/layout/Footer'
 import Hero from '../components/home/Hero'
-import Leadership from '../components/home/Leadership'
+import LeadershipTeam from '../components/home/LeadershipTeam'
 import Navbar from '../components/layout/Navbar'
 import Projects from '../components/home/Projects'
 import Services from '../components/home/Services'
 import Dashboard from '../pages/admin/Dashboard'
 import Enquiries from '../pages/admin/Enquiries'
-import Gallery from '../pages/admin/Gallery'
 import Login from '../pages/auth/Login'
 import AdminProjects from '../pages/admin/Projects'
 import AdminServices from '../pages/admin/Services'
-import AdminLeadership from '../pages/admin/Leadership'
+import AdminLeadershipTeam from '../pages/admin/LeadershipTeam'
 import Settings from '../pages/admin/Settings'
-import Testimonials from '../pages/admin/Testimonials'
+import AdminClientReviews from '../pages/admin/ClientReviews'
 
 function PublicWebsite() {
   return (
@@ -27,7 +27,8 @@ function PublicWebsite() {
         <About />
         <Services />
         <Projects />
-        <Leadership />
+        <LeadershipTeam />
+        <ClientReviews />
         <Contact />
       </main>
       <Footer />
@@ -62,9 +63,9 @@ export default function AppRoutes() {
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="projects" element={<AdminProjects />} />
         <Route path="services" element={<AdminServices />} />
-        <Route path="gallery" element={<Gallery />} />
-        <Route path="leadership" element={<AdminLeadership />} />
-        <Route path="testimonials" element={<Testimonials />} />
+        <Route path="leadership" element={<Navigate to="/admin/leadership-team" replace />} />
+        <Route path="leadership-team" element={<AdminLeadershipTeam />} />
+        <Route path="client-reviews" element={<AdminClientReviews />} />
         <Route path="enquiries" element={<Enquiries />} />
         <Route path="settings" element={<Settings />} />
       </Route>

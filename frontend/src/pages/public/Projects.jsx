@@ -1,1 +1,0 @@
-import PageIntro from '../../components/common/SectionTitle'; export default function Projects(){return <PageIntro eyebrow="PROJECTS" title="A portfolio of built work.">Projects, categories, images and brochure links will be fetched from the API.</PageIntro>}

@@ -7,7 +7,7 @@ export default function About() {
         <div className="about-media">
           <img src={heroImage} alt="Abhinav Infratek construction and infrastructure work" />
           <div className="experience-card" aria-label="Company experience">
-            <strong>12+</strong>
+            <strong>4+</strong>
             <span>Years of trusted project delivery</span>
           </div>
         </div>

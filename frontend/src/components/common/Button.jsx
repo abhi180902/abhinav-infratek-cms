@@ -1,2 +1,0 @@
-import { Link } from 'react-router-dom'
-export default function Button({children,to,href,className='',...props}){const style=`inline-flex items-center justify-center rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-800 ${className}`;if(href)return <a className={style} href={href}>{children}</a>;return to?<Link className={style} to={to}>{children}</Link>:<button className={style} {...props}>{children}</button>}

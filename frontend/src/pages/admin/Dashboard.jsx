@@ -1,15 +1,19 @@
-import { FolderKanban, GalleryHorizontal, Mail, MessageSquareQuote, Plus, UsersRound, Wrench } from 'lucide-react'
+import { FolderKanban, Mail, MessageSquareQuote, Plus, UsersRound, Wrench } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import DashboardCard from '../../components/admin/DashboardCard'
 import PageHeader from '../../components/admin/PageHeader'
 import StatusBadge from '../../components/admin/StatusBadge'
+import { getVisibleClientReviews } from '../../data/clientReviews'
+import { getVisibleLeadershipMembers } from '../../data/leadership'
+
+const activeClientReviewCount = getVisibleClientReviews().length.toString().padStart(2, '0')
+const activeLeadershipCount = getVisibleLeadershipMembers().length.toString().padStart(2, '0')
 
 const stats = [
   { title: 'Projects', count: '08', description: 'Portfolio items prepared for CMS management.', icon: FolderKanban },
   { title: 'Services', count: '10', description: 'Service cards ready for future API editing.', icon: Wrench },
-  { title: 'Gallery', count: '24', description: 'Image slots planned for curated project media.', icon: GalleryHorizontal },
-  { title: 'Leadership', count: '02', description: 'Founder and partner profiles configured.', icon: UsersRound },
-  { title: 'Testimonials', count: '06', description: 'Client feedback entries for homepage display.', icon: MessageSquareQuote },
+  { title: 'Leadership Team', count: activeLeadershipCount, description: 'Active leadership team profiles configured.', icon: UsersRound },
+  { title: 'Client Reviews', count: activeClientReviewCount, description: 'Client review entries for homepage display.', icon: MessageSquareQuote },
   { title: 'Enquiries', count: '03', description: 'Recent customer enquiries awaiting follow-up.', icon: Mail },
 ]
 

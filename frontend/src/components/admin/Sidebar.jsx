@@ -1,7 +1,6 @@
 import {
   Bell,
   FolderKanban,
-  GalleryHorizontal,
   Grid2X2,
   Home,
   LogOut,
@@ -25,9 +24,8 @@ const menuSections = [
     items: [
       { label: 'Projects', to: '/admin/projects', icon: FolderKanban },
       { label: 'Services', to: '/admin/services', icon: Wrench },
-      { label: 'Gallery', to: '/admin/gallery', icon: GalleryHorizontal },
-      { label: 'Leadership', to: '/admin/leadership', icon: UsersRound },
-      { label: 'Testimonials', to: '/admin/testimonials', icon: MessageSquareQuote },
+      { label: 'Leadership Team', to: '/admin/leadership-team', icon: UsersRound },
+      { label: 'Client Reviews', to: '/admin/client-reviews', icon: MessageSquareQuote },
     ],
   },
   {

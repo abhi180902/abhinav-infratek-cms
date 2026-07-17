@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react'
 import SectionCarousel from '../common/SectionCarousel'
-import { projects } from '../../data/projects'
+import { projectCategories, projects } from '../../data/projects'
 
-const filters = ['All', 'Residential', 'Commercial', 'Industrial', 'Infrastructure']
 const projectVisibleCounts = { desktop: 3, tablet: 2, mobile: 1 }
 
 export default function Projects() {
@@ -27,7 +26,7 @@ export default function Projects() {
 
         <div className="projects-heading">
           <div className="filter-buttons" aria-label="Filter projects by category">
-            {filters.map((filter) => (
+            {projectCategories.map((filter) => (
               <button
                 className={`filter-button ${activeFilter === filter ? 'is-active' : ''}`}
                 type="button"
@@ -53,7 +52,7 @@ export default function Projects() {
           renderItem={(project) => (
             <article className="project-card">
               <div className="project-image">
-                <img src={project.image} alt={project.title} />
+                <img src={project.coverImage} alt={project.title} />
               </div>
               <div className="project-card-body">
                 <span className="project-category">{project.category}</span>

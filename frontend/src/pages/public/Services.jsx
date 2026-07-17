@@ -1,1 +1,0 @@
-import PageIntro from '../../components/common/SectionTitle'; export default function Services(){return <PageIntro eyebrow="SERVICES" title="Construction capabilities from concept to completion.">Managed services will be rendered here from the API.</PageIntro>}
