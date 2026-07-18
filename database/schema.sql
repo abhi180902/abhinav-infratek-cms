@@ -101,14 +101,22 @@ CREATE INDEX IF NOT EXISTS idx_enquiries_created_at ON enquiries (created_at);
 
 CREATE TABLE IF NOT EXISTS site_settings (
     id BIGSERIAL PRIMARY KEY,
-    setting_key VARCHAR(120) NOT NULL UNIQUE,
-    setting_value TEXT,
-    value_type VARCHAR(40) NOT NULL DEFAULT 'TEXT',
-    group_name VARCHAR(80) NOT NULL DEFAULT 'GENERAL',
-    description VARCHAR(255),
-    editable BOOLEAN NOT NULL DEFAULT TRUE,
+    company_name VARCHAR(150) NOT NULL,
+    tagline VARCHAR(200),
+    phone VARCHAR(40),
+    alternate_phone VARCHAR(40),
+    email VARCHAR(160),
+    address TEXT,
+    hero_title VARCHAR(200),
+    hero_subtitle TEXT,
+    about_company TEXT,
+    logo_url TEXT,
+    logo_public_id VARCHAR(255),
+    facebook_url VARCHAR(500),
+    instagram_url VARCHAR(500),
+    linkedin_url VARCHAR(500),
+    youtube_url VARCHAR(500),
+    google_maps_embed_url TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE INDEX IF NOT EXISTS idx_site_settings_group_name ON site_settings (group_name);

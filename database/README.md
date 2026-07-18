@@ -154,24 +154,32 @@ Indexes:
 
 ### site_settings
 
-Purpose: Stores key-value site settings such as company details, contact info, homepage visibility controls, and future configuration values.
+Purpose: Stores the singleton website-wide settings record used by the public website and admin CMS.
 
 | Column | Type | Constraints / Default | Purpose |
 | --- | --- | --- | --- |
-| `id` | `BIGSERIAL` | Primary key | Unique setting identifier. |
-| `setting_key` | `VARCHAR(120)` | Not null, unique | Stable setting key. |
-| `setting_value` | `TEXT` | Nullable | Setting value. |
-| `value_type` | `VARCHAR(40)` | Not null, default `TEXT` | Type hint for parsing/display. |
-| `group_name` | `VARCHAR(80)` | Not null, default `GENERAL` | Admin grouping. |
-| `description` | `VARCHAR(255)` | Nullable | Admin help text. |
-| `editable` | `BOOLEAN` | Not null, default `TRUE` | Whether admins can edit this setting. |
+| `id` | `BIGSERIAL` | Primary key | Singleton settings identifier. |
+| `company_name` | `VARCHAR(150)` | Not null | Public company name. |
+| `tagline` | `VARCHAR(200)` | Nullable | Company tagline. |
+| `phone` | `VARCHAR(40)` | Nullable | Primary phone number. |
+| `alternate_phone` | `VARCHAR(40)` | Nullable | Secondary phone number. |
+| `email` | `VARCHAR(160)` | Nullable | Primary contact email. |
+| `address` | `TEXT` | Nullable | Company address. |
+| `hero_title` | `VARCHAR(200)` | Nullable | Homepage hero headline. |
+| `hero_subtitle` | `TEXT` | Nullable | Homepage hero supporting copy. |
+| `about_company` | `TEXT` | Nullable | Public about/company description. |
+| `logo_url` | `TEXT` | Nullable | Cloudinary secure logo URL. |
+| `logo_public_id` | `VARCHAR(255)` | Nullable | Cloudinary public ID used for logo replace/delete operations. |
+| `facebook_url` | `VARCHAR(500)` | Nullable | Facebook profile URL. |
+| `instagram_url` | `VARCHAR(500)` | Nullable | Instagram profile URL. |
+| `linkedin_url` | `VARCHAR(500)` | Nullable | LinkedIn profile URL. |
+| `youtube_url` | `VARCHAR(500)` | Nullable | YouTube channel URL. |
+| `google_maps_embed_url` | `TEXT` | Nullable | Google Maps embed URL. |
 | `created_at` | `TIMESTAMP` | Not null, default `CURRENT_TIMESTAMP` | Record creation time. |
 | `updated_at` | `TIMESTAMP` | Not null, default `CURRENT_TIMESTAMP` | Last update time. |
 
 Indexes:
 - Primary key on `id`
-- Unique index on `setting_key`
-- Index on `group_name`
 
 ## Image Storage Notes
 
@@ -183,6 +191,8 @@ Image columns store Cloudinary secure delivery URLs where upload support exists.
 - `leadership_members.image_public_id`
 - `client_reviews.image_url`
 - `client_reviews.image_public_id`
+- `site_settings.logo_url`
+- `site_settings.logo_public_id`
 
 Future modules should follow the same pattern when they need image replacement or deletion.
 

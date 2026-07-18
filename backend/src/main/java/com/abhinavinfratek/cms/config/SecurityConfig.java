@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/projects").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/projects/{slug}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/client-reviews").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/site-settings").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())

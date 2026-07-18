@@ -44,15 +44,43 @@ VALUES
     ('Road construction consultation', 'contractor@example.com', '+91 91111 11111', 'Road Construction', 'Please share the next steps for a road construction consultation.', 'NEW'),
     ('Interior design discussion', 'homeowner@example.com', '+91 92222 22222', 'Interior Design', 'We need interior design and execution support for a family home.', 'IN_REVIEW');
 
-INSERT INTO site_settings (setting_key, setting_value, value_type, group_name, description, editable)
+INSERT INTO site_settings (
+    id,
+    company_name,
+    tagline,
+    phone,
+    alternate_phone,
+    email,
+    address,
+    hero_title,
+    hero_subtitle,
+    about_company,
+    logo_url,
+    logo_public_id,
+    facebook_url,
+    instagram_url,
+    linkedin_url,
+    youtube_url,
+    google_maps_embed_url
+)
 VALUES
-    ('company_name', 'Abhinav Infratek', 'TEXT', 'COMPANY', 'Public company name.', TRUE),
-    ('company_tagline', 'Engineers & Architects', 'TEXT', 'COMPANY', 'Public company tagline.', TRUE),
-    ('location', 'Ranebennur, Karnataka', 'TEXT', 'COMPANY', 'Primary service location.', TRUE),
-    ('address', 'Basavashree Nilaya, Vageesh Nagar 2nd Cross, Behind Adishakthi Temple, Medleri Road, Ranebennur - 581115, Haveri, Karnataka', 'TEXT', 'CONTACT', 'Registered office address.', TRUE),
-    ('email', 'prasadsangamad162@gmail.com', 'EMAIL', 'CONTACT', 'Primary contact email.', TRUE),
-    ('phone_primary', '+91 72593 4720', 'PHONE', 'CONTACT', 'Primary contact phone.', TRUE),
-    ('phone_secondary', '+91 91102 71018', 'PHONE', 'CONTACT', 'Secondary contact phone.', TRUE),
-    ('homepage_client_reviews_visible', 'true', 'BOOLEAN', 'HOMEPAGE', 'Controls Client Reviews section visibility.', TRUE),
-    ('homepage_leadership_visible', 'true', 'BOOLEAN', 'HOMEPAGE', 'Controls Leadership Team section visibility.', TRUE)
-ON CONFLICT (setting_key) DO NOTHING;
+    (
+        1,
+        'Abhinav Infratek',
+        'Engineers & Architects',
+        '+91 72593 4720',
+        '+91 91102 71018',
+        'prasadsangamad162@gmail.com',
+        'Basavashree Nilaya, Vageesh Nagar 2nd Cross, Behind Adishakthi Temple, Medleri Road, Ranebennur - 581115, Haveri, Karnataka',
+        'Modern construction shaped by engineering clarity.',
+        'Abhinav Infratek delivers building planning, architectural consultancy, interiors, structural guidance, and turnkey civil execution.',
+        'Abhinav Infratek provides engineering-led planning, architecture, interiors, structural consultancy, and construction execution for residential and commercial projects.',
+        'https://res.cloudinary.com/demo/image/upload/abhinav-infratek/site-settings/logo.png',
+        'abhinav-infratek/site-settings/logo',
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+    )
+ON CONFLICT (id) DO NOTHING;
