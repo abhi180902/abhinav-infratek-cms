@@ -31,53 +31,32 @@ CREATE INDEX IF NOT EXISTS idx_services_active_order ON services (active, displa
 
 CREATE TABLE IF NOT EXISTS projects (
     id BIGSERIAL PRIMARY KEY,
-    slug VARCHAR(140) NOT NULL UNIQUE,
-    title VARCHAR(180) NOT NULL,
+    title VARCHAR(150) NOT NULL,
+    slug VARCHAR(170) NOT NULL UNIQUE,
     description TEXT NOT NULL,
-    category VARCHAR(80) NOT NULL,
-    location VARCHAR(180) NOT NULL,
-    project_year INTEGER NOT NULL,
-    status VARCHAR(60) NOT NULL DEFAULT 'Completed',
-    cover_image_url VARCHAR(500) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    location VARCHAR(150),
+    completion_date DATE,
+    image_url TEXT NOT NULL,
+    image_public_id VARCHAR(255) NOT NULL UNIQUE,
     display_order INTEGER NOT NULL DEFAULT 0,
+    featured BOOLEAN NOT NULL DEFAULT FALSE,
     active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS idx_projects_category ON projects (category);
-CREATE INDEX IF NOT EXISTS idx_projects_status ON projects (status);
 CREATE INDEX IF NOT EXISTS idx_projects_active_order ON projects (active, display_order);
-
-CREATE TABLE IF NOT EXISTS project_gallery_images (
-    id BIGSERIAL PRIMARY KEY,
-    project_id BIGINT NOT NULL,
-    image_url VARCHAR(500) NOT NULL,
-    alt_text VARCHAR(180),
-    display_order INTEGER NOT NULL DEFAULT 0,
-    active BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_project_gallery_images_project
-        FOREIGN KEY (project_id)
-        REFERENCES projects (id)
-        ON DELETE CASCADE,
-    CONSTRAINT uq_project_gallery_images_project_url UNIQUE (project_id, image_url)
-);
-
-CREATE INDEX IF NOT EXISTS idx_project_gallery_project_id ON project_gallery_images (project_id);
-CREATE INDEX IF NOT EXISTS idx_project_gallery_project_active_order ON project_gallery_images (project_id, active, display_order);
+CREATE INDEX IF NOT EXISTS idx_projects_featured_active ON projects (featured, active);
 
 CREATE TABLE IF NOT EXISTS leadership_members (
     id BIGSERIAL PRIMARY KEY,
-    slug VARCHAR(140) NOT NULL UNIQUE,
-    full_name VARCHAR(160) NOT NULL,
-    designation VARCHAR(160) NOT NULL,
-    bio TEXT NOT NULL,
-    profile_image_url VARCHAR(500),
-    phone VARCHAR(40),
-    email VARCHAR(160),
-    linkedin_url VARCHAR(500),
+    name VARCHAR(120) NOT NULL,
+    designation VARCHAR(120) NOT NULL,
+    bio TEXT,
+    image_url VARCHAR(500) NOT NULL,
+    image_public_id VARCHAR(255) NOT NULL UNIQUE,
     display_order INTEGER NOT NULL DEFAULT 0,
     active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -88,15 +67,13 @@ CREATE INDEX IF NOT EXISTS idx_leadership_members_active_order ON leadership_mem
 
 CREATE TABLE IF NOT EXISTS client_reviews (
     id BIGSERIAL PRIMARY KEY,
-    slug VARCHAR(160) NOT NULL UNIQUE,
-    client_name VARCHAR(160) NOT NULL,
-    project_name VARCHAR(180) NOT NULL,
-    location VARCHAR(180) NOT NULL,
+    client_name VARCHAR(120) NOT NULL,
+    company_name VARCHAR(150),
+    designation VARCHAR(120),
     review TEXT NOT NULL,
-    rating INTEGER NOT NULL DEFAULT 5,
-    project_image_url VARCHAR(500) NOT NULL,
-    client_image_url VARCHAR(500),
-    completed_year INTEGER,
+    rating INTEGER NOT NULL,
+    image_url TEXT,
+    image_public_id VARCHAR(255),
     display_order INTEGER NOT NULL DEFAULT 0,
     active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

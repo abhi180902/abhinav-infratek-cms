@@ -8,10 +8,9 @@ The backend currently contains only the authentication module, with the `AdminUs
 
 - Use `BIGSERIAL` primary keys for backend-managed records.
 - Use `slug` fields for stable frontend/API identifiers where useful.
-- Store image references as `VARCHAR` URL fields. Cloudinary is not implemented yet.
+- Store image references as `VARCHAR` URL fields. Modules that upload to Cloudinary also store the provider `public_id`.
 - Use `display_order` and `active` for homepage ordering and visibility.
 - Use `created_at` and `updated_at` on all CMS-managed tables.
-- Use relational design for multiple project gallery images instead of storing arrays in one column.
 
 ## Tables
 
@@ -63,15 +62,16 @@ Purpose: Stores portfolio projects shown on the public website and managed by th
 | Column | Type | Constraints / Default | Purpose |
 | --- | --- | --- | --- |
 | `id` | `BIGSERIAL` | Primary key | Unique project identifier. |
-| `slug` | `VARCHAR(140)` | Not null, unique | Stable API/frontend key. |
-| `title` | `VARCHAR(180)` | Not null | Project title. |
+| `title` | `VARCHAR(150)` | Not null | Project title. |
+| `slug` | `VARCHAR(170)` | Not null, unique | Stable API/frontend key. |
 | `description` | `TEXT` | Not null | Project summary. |
-| `category` | `VARCHAR(80)` | Not null | Project category, such as Residential or Commercial. |
-| `location` | `VARCHAR(180)` | Not null | Project location. |
-| `project_year` | `INTEGER` | Not null | Completion or active project year. |
-| `status` | `VARCHAR(60)` | Not null, default `Completed` | Project status. |
-| `cover_image_url` | `VARCHAR(500)` | Not null | Main project image URL. |
+| `category` | `VARCHAR(100)` | Not null | Project category, such as Residential or Commercial. |
+| `location` | `VARCHAR(150)` | Nullable | Project location. |
+| `completion_date` | `DATE` | Nullable | Project completion date. |
+| `image_url` | `TEXT` | Not null | Cloudinary secure project image URL. |
+| `image_public_id` | `VARCHAR(255)` | Not null, unique | Cloudinary public ID used for replace/delete operations. |
 | `display_order` | `INTEGER` | Not null, default `0` | Homepage/admin ordering. |
+| `featured` | `BOOLEAN` | Not null, default `FALSE` | Marks highlighted projects for future UI use. |
 | `active` | `BOOLEAN` | Not null, default `TRUE` | Public visibility flag. |
 | `created_at` | `TIMESTAMP` | Not null, default `CURRENT_TIMESTAMP` | Record creation time. |
 | `updated_at` | `TIMESTAMP` | Not null, default `CURRENT_TIMESTAMP` | Last update time. |
@@ -79,30 +79,10 @@ Purpose: Stores portfolio projects shown on the public website and managed by th
 Indexes:
 - Primary key on `id`
 - Unique index on `slug`
+- Unique constraint on `image_public_id`
 - Index on `category`
-- Index on `status`
 - Composite index on `active, display_order`
-
-### project_gallery_images
-
-Purpose: Stores multiple gallery image URLs for each project. This is the recommended relational design for `galleryImages[]`.
-
-| Column | Type | Constraints / Default | Purpose |
-| --- | --- | --- | --- |
-| `id` | `BIGSERIAL` | Primary key | Unique gallery image identifier. |
-| `project_id` | `BIGINT` | Not null, foreign key to `projects(id)` | Parent project. |
-| `image_url` | `VARCHAR(500)` | Not null | Gallery image URL. |
-| `alt_text` | `VARCHAR(180)` | Nullable | Accessible image description. |
-| `display_order` | `INTEGER` | Not null, default `0` | Gallery ordering. |
-| `active` | `BOOLEAN` | Not null, default `TRUE` | Gallery image visibility flag. |
-| `created_at` | `TIMESTAMP` | Not null, default `CURRENT_TIMESTAMP` | Record creation time. |
-| `updated_at` | `TIMESTAMP` | Not null, default `CURRENT_TIMESTAMP` | Last update time. |
-
-Indexes:
-- Primary key on `id`
-- Unique constraint on `project_id, image_url`
-- Foreign key index on `project_id`
-- Composite index on `project_id, active, display_order`
+- Composite index on `featured, active`
 
 ### leadership_members
 
@@ -111,14 +91,11 @@ Purpose: Stores unlimited leadership team members for the public homepage.
 | Column | Type | Constraints / Default | Purpose |
 | --- | --- | --- | --- |
 | `id` | `BIGSERIAL` | Primary key | Unique leadership member identifier. |
-| `slug` | `VARCHAR(140)` | Not null, unique | Stable API/frontend key. |
-| `full_name` | `VARCHAR(160)` | Not null | Member full name. |
-| `designation` | `VARCHAR(160)` | Not null | Role/title. |
-| `bio` | `TEXT` | Not null | Short professional description. |
-| `profile_image_url` | `VARCHAR(500)` | Nullable | Member profile image URL. |
-| `phone` | `VARCHAR(40)` | Nullable | Contact phone number. |
-| `email` | `VARCHAR(160)` | Nullable | Contact email. |
-| `linkedin_url` | `VARCHAR(500)` | Nullable | LinkedIn profile URL. |
+| `name` | `VARCHAR(120)` | Not null | Member display name. |
+| `designation` | `VARCHAR(120)` | Not null | Role/title. |
+| `bio` | `TEXT` | Nullable | Short professional description. |
+| `image_url` | `VARCHAR(500)` | Not null | Cloudinary secure image URL. |
+| `image_public_id` | `VARCHAR(255)` | Not null, unique | Cloudinary public ID used for replace/delete operations. |
 | `display_order` | `INTEGER` | Not null, default `0` | Homepage/admin ordering. |
 | `active` | `BOOLEAN` | Not null, default `TRUE` | Public visibility flag. |
 | `created_at` | `TIMESTAMP` | Not null, default `CURRENT_TIMESTAMP` | Record creation time. |
@@ -126,25 +103,23 @@ Purpose: Stores unlimited leadership team members for the public homepage.
 
 Indexes:
 - Primary key on `id`
-- Unique index on `slug`
+- Unique constraint on `image_public_id`
 - Composite index on `active, display_order`
 
 ### client_reviews
 
-Purpose: Stores public client review cards with project imagery, client avatar support, ratings, and display ordering.
+Purpose: Stores public client review cards with optional reviewer imagery, ratings, and display ordering.
 
 | Column | Type | Constraints / Default | Purpose |
 | --- | --- | --- | --- |
 | `id` | `BIGSERIAL` | Primary key | Unique client review identifier. |
-| `slug` | `VARCHAR(160)` | Not null, unique | Stable API/frontend key. |
-| `client_name` | `VARCHAR(160)` | Not null | Review author/client name. |
-| `project_name` | `VARCHAR(180)` | Not null | Related project name. |
-| `location` | `VARCHAR(180)` | Not null | Project/client location. |
+| `client_name` | `VARCHAR(120)` | Not null | Review author/client name. |
+| `company_name` | `VARCHAR(150)` | Nullable | Client company name, if applicable. |
+| `designation` | `VARCHAR(120)` | Nullable | Client designation or relationship to project. |
 | `review` | `TEXT` | Not null | Client review text. |
-| `rating` | `INTEGER` | Not null, default `5`, check 1-5 | Star rating. |
-| `project_image_url` | `VARCHAR(500)` | Not null | Completed project image URL. |
-| `client_image_url` | `VARCHAR(500)` | Nullable | Client avatar/photo URL. |
-| `completed_year` | `INTEGER` | Nullable | Completion year. |
+| `rating` | `INTEGER` | Not null, check 1-5 | Star rating. |
+| `image_url` | `TEXT` | Nullable | Optional Cloudinary secure reviewer image URL. |
+| `image_public_id` | `VARCHAR(255)` | Nullable | Optional Cloudinary public ID used for replace/delete operations. |
 | `display_order` | `INTEGER` | Not null, default `0` | Homepage/admin ordering. |
 | `active` | `BOOLEAN` | Not null, default `TRUE` | Public visibility flag. |
 | `created_at` | `TIMESTAMP` | Not null, default `CURRENT_TIMESTAMP` | Record creation time. |
@@ -152,7 +127,6 @@ Purpose: Stores public client review cards with project imagery, client avatar s
 
 Indexes:
 - Primary key on `id`
-- Unique index on `slug`
 - Composite index on `active, display_order`
 - Check constraint on `rating` between 1 and 5
 
@@ -201,15 +175,16 @@ Indexes:
 
 ## Image Storage Notes
 
-Cloudinary is not implemented yet. Until Cloudinary integration is added, image columns are documented as URL strings:
+Image columns store Cloudinary secure delivery URLs where upload support exists. Modules that replace or delete uploaded assets also store Cloudinary public IDs.
 
-- `projects.cover_image_url`
-- `project_gallery_images.image_url`
-- `leadership_members.profile_image_url`
-- `client_reviews.project_image_url`
-- `client_reviews.client_image_url`
+- `projects.image_url`
+- `projects.image_public_id`
+- `leadership_members.image_url`
+- `leadership_members.image_public_id`
+- `client_reviews.image_url`
+- `client_reviews.image_public_id`
 
-Future Cloudinary integration can continue storing secure delivery URLs in these fields, with optional future columns for provider public IDs if needed.
+Future modules should follow the same pattern when they need image replacement or deletion.
 
 ## Files
 

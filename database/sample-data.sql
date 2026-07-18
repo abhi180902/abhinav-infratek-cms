@@ -21,48 +21,22 @@ VALUES
     ('civil-contract-supervision', 'supervision', 'Civil Contract & Supervision', 'Civil contract execution and supervision work focused on quality, progress, and accountability.', 10, TRUE)
 ON CONFLICT (slug) DO NOTHING;
 
-INSERT INTO projects (slug, title, description, category, location, project_year, status, cover_image_url, display_order, active)
+INSERT INTO projects (title, slug, description, category, location, completion_date, image_url, image_public_id, display_order, featured, active)
 VALUES
-    ('urban-residence', 'Urban Residence', 'Contemporary residential planning with practical detailing and site-focused execution.', 'Residential', 'Ranebennur, Karnataka', 2025, 'Completed', '/assets/images/hero.png', 1, TRUE),
-    ('premium-villa-cluster', 'Premium Villa Cluster', 'Premium villa planning with elevation concepts, estimation, and quality supervision.', 'Residential', 'Haveri, Karnataka', 2024, 'Completed', '/assets/images/hero.png', 2, TRUE),
-    ('business-center', 'Business Center Fitout', 'Functional commercial space planning with structural coordination and turnkey support.', 'Commercial', 'Ranebennur, Karnataka', 2025, 'In Progress', '/assets/images/hero.png', 3, TRUE),
-    ('retail-frontage', 'Retail Frontage Upgrade', 'Modern retail frontage improvement with architectural detailing and civil execution.', 'Commercial', 'Haveri, Karnataka', 2023, 'Completed', '/assets/images/hero.png', 4, TRUE),
-    ('fabrication-facility', 'Fabrication Facility', 'Industrial facility execution with durable civil work and supervision controls.', 'Industrial', 'Ranebennur, Karnataka', 2024, 'Completed', '/assets/images/hero.png', 5, TRUE),
-    ('warehouse-expansion', 'Warehouse Expansion', 'Warehouse expansion with efficient planning, valuation support, and site management.', 'Industrial', 'Byadagi, Karnataka', 2023, 'Completed', '/assets/images/hero.png', 6, TRUE),
-    ('civic-roadworks', 'Civic Roadworks', 'Roadwork execution with disciplined construction tracking and safety-focused delivery.', 'Infrastructure', 'Ranebennur, Karnataka', 2025, 'In Progress', '/assets/images/hero.png', 7, TRUE),
-    ('stormwater-upgrade', 'Stormwater Upgrade', 'Drainage and stormwater improvement work with reliable civil supervision.', 'Infrastructure', 'Haveri, Karnataka', 2024, 'Completed', '/assets/images/hero.png', 8, TRUE)
+    ('Urban Residence', 'urban-residence', 'Contemporary residential planning with practical detailing and site-focused execution.', 'Residential', 'Ranebennur, Karnataka', '2025-04-15', 'https://res.cloudinary.com/demo/image/upload/abhinav-infratek/projects/urban-residence.jpg', 'abhinav-infratek/projects/urban-residence', 1, TRUE, TRUE),
+    ('Business Center Fitout', 'business-center-fitout', 'Functional commercial space planning with structural coordination and turnkey support.', 'Commercial', 'Ranebennur, Karnataka', '2025-01-20', 'https://res.cloudinary.com/demo/image/upload/abhinav-infratek/projects/business-center-fitout.jpg', 'abhinav-infratek/projects/business-center-fitout', 2, FALSE, TRUE)
 ON CONFLICT (slug) DO NOTHING;
 
-INSERT INTO project_gallery_images (project_id, image_url, alt_text, display_order, active)
-SELECT id, cover_image_url, title || ' gallery image', 1, TRUE
-FROM projects
-WHERE slug IN (
-    'urban-residence',
-    'premium-villa-cluster',
-    'business-center',
-    'retail-frontage',
-    'fabrication-facility',
-    'warehouse-expansion',
-    'civic-roadworks',
-    'stormwater-upgrade'
-)
-ON CONFLICT (project_id, image_url) DO NOTHING;
-
-INSERT INTO leadership_members (slug, full_name, designation, bio, profile_image_url, phone, email, linkedin_url, display_order, active)
+INSERT INTO leadership_members (name, designation, bio, image_url, image_public_id, display_order, active)
 VALUES
-    ('prasad-sangamad', 'Er. Prasad S. Sangamad', 'Founder & Civil Engineer', 'Leads project planning, client coordination, and civil execution with a focus on quality, trust, and practical engineering.', '/assets/images/prasad-sangamad.png', '+91 72593 4720', 'prasadsangamad162@gmail.com', NULL, 1, TRUE),
-    ('pavanraj-patil', 'Er. Pavanraj R. Patil', 'Co-Founder & Structural Engineer', 'Guides structural consultancy and engineering decisions for safe, efficient, and dependable construction outcomes.', '/assets/images/pavanraj-patil.png', '+91 91102 71018', 'prasadsangamad162@gmail.com', NULL, 2, TRUE),
-    ('hammad-maroof-imdadi', 'HAMMAD MAROOF IMDADI', 'Structural Engineer', 'M.Tech in Structural Engineering from Siddaganga Institute of Technology, Tumkur with CGPA 8.89/10, and B.E. in Civil Engineering from Sapthagiri College of Engineering, Bangalore with CGPA 7.86/10.', '/assets/images/hammad-maroof-imdadi.jpeg', '+91-6363878390', NULL, NULL, 3, TRUE)
-ON CONFLICT (slug) DO NOTHING;
+    ('Er. Prasad S. Sangamad', 'Founder & Civil Engineer', 'Leads project planning, client coordination, and civil execution with a focus on quality, trust, and practical engineering.', 'https://res.cloudinary.com/demo/image/upload/abhinav-infratek/leadership/prasad-sangamad.png', 'abhinav-infratek/leadership/prasad-sangamad', 1, TRUE),
+    ('Er. Pavanraj R. Patil', 'Co-Founder & Structural Engineer', 'Guides structural consultancy and engineering decisions for safe, efficient, and dependable construction outcomes.', 'https://res.cloudinary.com/demo/image/upload/abhinav-infratek/leadership/pavanraj-patil.png', 'abhinav-infratek/leadership/pavanraj-patil', 2, TRUE)
+ON CONFLICT (image_public_id) DO NOTHING;
 
-INSERT INTO client_reviews (slug, client_name, project_name, location, review, rating, project_image_url, client_image_url, completed_year, display_order, active)
+INSERT INTO client_reviews (client_name, company_name, designation, review, rating, image_url, image_public_id, display_order, active)
 VALUES
-    ('ramesh-patil-luxury-villa', 'Ramesh Patil', 'Luxury Villa', 'Ranebennur, Karnataka', 'The team completed our dream home on time. Excellent planning, communication, and quality from concept to handover.', 5, '/assets/images/hero.png', NULL, 2025, 1, TRUE),
-    ('shweta-kulkarni-family-residence', 'Shweta Kulkarni', 'Family Residence', 'Haveri, Karnataka', 'Abhinav Infratek made every construction stage clear and manageable. Their site supervision and design guidance gave us complete confidence.', 5, '/assets/images/hero.png', NULL, 2024, 2, TRUE),
-    ('arun-traders-commercial-frontage', 'Arun Traders', 'Commercial Frontage Upgrade', 'Ranebennur, Karnataka', 'Our commercial space was delivered with practical planning, reliable estimates, and disciplined execution. The final finish improved our customer experience.', 5, '/assets/images/hero.png', NULL, 2024, 3, TRUE),
-    ('manjunath-industrial-shed', 'Manjunath H.', 'Industrial Shed', 'Byadagi, Karnataka', 'Their structural recommendations were clear and practical. The project moved smoothly because the team coordinated drawings, materials, and site execution well.', 5, '/assets/images/hero.png', NULL, 2023, 4, TRUE),
-    ('savitha-interior-execution', 'Savitha N.', 'Interior Design & Execution', 'Haveri, Karnataka', 'The interiors were handled with attention to both beauty and daily use. Their suggestions helped us get a premium finish within our planned budget.', 5, '/assets/images/hero.png', NULL, 2023, 5, TRUE)
-ON CONFLICT (slug) DO NOTHING;
+    ('Ramesh Patil', NULL, 'Villa Owner', 'The team completed our dream home on time. Excellent planning, communication, and quality from concept to handover.', 5, 'https://res.cloudinary.com/demo/image/upload/abhinav-infratek/client-reviews/ramesh-patil.jpg', 'abhinav-infratek/client-reviews/ramesh-patil', 1, TRUE),
+    ('Shweta Kulkarni', NULL, 'Homeowner', 'Abhinav Infratek made every construction stage clear and manageable. Their site supervision and design guidance gave us complete confidence.', 5, 'https://res.cloudinary.com/demo/image/upload/abhinav-infratek/client-reviews/shweta-kulkarni.jpg', 'abhinav-infratek/client-reviews/shweta-kulkarni', 2, TRUE);
 
 INSERT INTO enquiries (name, email, phone, project_type, message, status)
 VALUES
