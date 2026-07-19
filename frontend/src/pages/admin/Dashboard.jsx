@@ -1,26 +1,26 @@
 import { FolderKanban, Mail, MessageSquareQuote, Plus, UsersRound, Wrench } from 'lucide-react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import DashboardCard from '../../components/admin/DashboardCard'
 import PageHeader from '../../components/admin/PageHeader'
 import StatusBadge from '../../components/admin/StatusBadge'
-import { getVisibleClientReviews } from '../../data/clientReviews'
-import { getVisibleLeadershipMembers } from '../../data/leadership'
+import { getDashboardSummary } from '../../services/dashboardService'
 
-const activeClientReviewCount = getVisibleClientReviews().length.toString().padStart(2, '0')
-const activeLeadershipCount = getVisibleLeadershipMembers().length.toString().padStart(2, '0')
-
-const stats = [
-  { title: 'Projects', count: '08', description: 'Portfolio items prepared for CMS management.', icon: FolderKanban },
-  { title: 'Services', count: '10', description: 'Service cards ready for future API editing.', icon: Wrench },
-  { title: 'Leadership Team', count: activeLeadershipCount, description: 'Active leadership team profiles configured.', icon: UsersRound },
-  { title: 'Client Reviews', count: activeClientReviewCount, description: 'Client review entries for homepage display.', icon: MessageSquareQuote },
-  { title: 'Enquiries', count: '03', description: 'Recent customer enquiries awaiting follow-up.', icon: Mail },
-]
+const emptyDashboard = {
+  services: 0,
+  projects: 0,
+  leadershipMembers: 0,
+  clientReviews: 0,
+  totalEnquiries: 0,
+  newEnquiries: 0,
+  contactedEnquiries: 0,
+  closedEnquiries: 0,
+}
 
 const activities = [
   { title: 'Homepage carousel polished', time: 'Today', tone: 'success' },
-  { title: 'Admin dashboard foundation created', time: 'Today', tone: 'success' },
-  { title: 'Spring Boot API integration pending', time: 'Next phase', tone: 'warning' },
+  { title: 'Admin dashboard connected to backend', time: 'Today', tone: 'success' },
+  { title: 'Content CRUD integration pending', time: 'Next phase', tone: 'warning' },
 ]
 
 const enquiries = [
@@ -38,13 +38,95 @@ const quickActions = [
 ]
 
 export default function Dashboard() {
+  const [dashboard, setDashboard] = useState(emptyDashboard)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  const applyDashboardFetch = useCallback(async () => {
+    const data = await getDashboardSummary()
+    setDashboard({ ...emptyDashboard, ...data })
+  }, [])
+
+  const loadDashboard = useCallback(async () => {
+    setIsLoading(true)
+    setError('')
+
+    try {
+      await applyDashboardFetch()
+    } catch {
+      setError('Unable to load dashboard summary. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [applyDashboardFetch])
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function fetchDashboard() {
+      try {
+        const data = await getDashboardSummary()
+
+        if (isMounted) {
+          setDashboard({ ...emptyDashboard, ...data })
+        }
+      } catch {
+        if (isMounted) {
+          setError('Unable to load dashboard summary. Please try again.')
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    fetchDashboard()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  const stats = useMemo(
+    () => [
+      { title: 'Projects', count: dashboard.projects, description: 'Portfolio items managed in the CMS.', icon: FolderKanban },
+      { title: 'Services', count: dashboard.services, description: 'Service cards available for public display.', icon: Wrench },
+      { title: 'Leadership Members', count: dashboard.leadershipMembers, description: 'Leadership team profiles configured.', icon: UsersRound },
+      { title: 'Client Reviews', count: dashboard.clientReviews, description: 'Client review entries for homepage display.', icon: MessageSquareQuote },
+      { title: 'Total Enquiries', count: dashboard.totalEnquiries, description: 'Customer enquiries received through the website.', icon: Mail },
+      { title: 'New Enquiries', count: dashboard.newEnquiries, description: 'New enquiries awaiting first response.', icon: Mail },
+      { title: 'Contacted Enquiries', count: dashboard.contactedEnquiries, description: 'Enquiries already contacted by the team.', icon: Mail },
+      { title: 'Closed Enquiries', count: dashboard.closedEnquiries, description: 'Completed or closed enquiry records.', icon: Mail },
+    ],
+    [dashboard],
+  )
+
   return (
     <section>
-      <PageHeader breadcrumb="Overview" title="Dashboard" description="Monitor public website content, enquiries, and upcoming CMS integration points." />
+      <PageHeader
+        breadcrumb="Overview"
+        title="Dashboard"
+        description="Monitor public website content, enquiries, and upcoming CMS integration points."
+        action={
+          <button className="admin-primary-button" type="button" onClick={loadDashboard} disabled={isLoading}>
+            {isLoading ? 'Refreshing...' : 'Refresh'}
+          </button>
+        }
+      />
+
+      {error ? (
+        <div className="admin-error" role="alert">
+          {error}
+          <button className="admin-primary-button" type="button" onClick={loadDashboard}>
+            Retry
+          </button>
+        </div>
+      ) : null}
 
       <div className="dashboard-grid">
         {stats.map((item) => (
-          <DashboardCard key={item.title} {...item} />
+          <DashboardCard key={item.title} {...item} count={isLoading ? '--' : item.count} />
         ))}
       </div>
 

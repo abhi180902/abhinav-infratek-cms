@@ -8,11 +8,13 @@ import {
   MessageSquareQuote,
   Settings,
   SlidersHorizontal,
+  UserRound,
   UsersRound,
   Wrench,
 } from 'lucide-react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import logo from '../../assets/images/company-logo.png'
+import { useAuth } from '../../hooks/useAuth'
 
 const menuSections = [
   {
@@ -37,6 +39,7 @@ const menuSections = [
     items: [
       { label: 'Homepage Sections', helper: 'Manage visible sections', to: '/admin/settings', icon: Home },
       { label: 'General Settings', helper: 'Contact and company info', to: '/admin/settings', icon: Settings },
+      { label: 'My Account', helper: 'Profile and password', to: '/admin/account', icon: UserRound },
       { label: 'Announcements', helper: 'Future notices', to: '/admin/settings', icon: Bell },
       { label: 'Display Controls', helper: 'Future visibility options', to: '/admin/settings', icon: SlidersHorizontal },
     ],
@@ -45,9 +48,10 @@ const menuSections = [
 
 export default function Sidebar({ onNavigate }) {
   const navigate = useNavigate()
+  const { logout } = useAuth()
 
   const handleLogout = () => {
-    localStorage.removeItem('abhinav_admin_auth')
+    logout()
     navigate('/admin/login', { replace: true })
   }
 

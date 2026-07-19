@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import logo from '../../assets/images/company-logo.png'
+import { useAuth } from '../../hooks/useAuth'
 
-const ADMIN_EMAIL = 'admin@abhinavinfratek.in'
-const ADMIN_PASSWORD = 'Admin@123'
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -11,24 +11,35 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
+  const { loading, login } = useAuth()
   const navigate = useNavigate()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
+    setError('')
 
-    if (email.trim().toLowerCase() !== ADMIN_EMAIL || password !== ADMIN_PASSWORD) {
-      setError('Invalid email or password.')
+    if (!email.trim()) {
+      setError('Email is required.')
       return
     }
 
-    localStorage.setItem(
-      'abhinav_admin_auth',
-      JSON.stringify({
-        email: ADMIN_EMAIL,
-        rememberMe,
-        signedInAt: new Date().toISOString(),
-      }),
-    )
+    if (!EMAIL_PATTERN.test(email.trim())) {
+      setError('Enter a valid email address.')
+      return
+    }
+
+    if (!password) {
+      setError('Password is required.')
+      return
+    }
+
+    const result = await login({ email, password, rememberMe })
+
+    if (!result.success) {
+      setError(result.message)
+      return
+    }
+
     navigate('/admin/dashboard', { replace: true })
   }
 
@@ -49,7 +60,7 @@ export default function Login() {
         <form className="admin-form" onSubmit={handleSubmit}>
           <div className="admin-field">
             <label htmlFor="admin-email">Email</label>
-            <input id="admin-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder={ADMIN_EMAIL} autoComplete="email" required />
+            <input id="admin-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="admin@yourdomain.com" autoComplete="email" disabled={loading} required />
           </div>
 
           <div className="admin-field">
@@ -62,9 +73,10 @@ export default function Login() {
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="Enter password"
                 autoComplete="current-password"
+                disabled={loading}
                 required
               />
-              <button className="admin-inline-button" type="button" onClick={() => setShowPassword((value) => !value)}>
+              <button className="admin-inline-button" type="button" onClick={() => setShowPassword((value) => !value)} disabled={loading}>
                 {showPassword ? 'Hide' : 'Show'}
               </button>
             </div>
@@ -72,7 +84,7 @@ export default function Login() {
 
           <div className="admin-form-row">
             <label className="admin-checkbox">
-              <input type="checkbox" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} />
+              <input type="checkbox" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} disabled={loading} />
               Remember me
             </label>
             <button className="admin-forgot" type="button" disabled>
@@ -82,8 +94,8 @@ export default function Login() {
 
           {error ? <p className="admin-error">{error}</p> : null}
 
-          <button className="admin-submit" type="submit">
-            Sign In
+          <button className="admin-submit" type="submit" disabled={loading}>
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
       </section>

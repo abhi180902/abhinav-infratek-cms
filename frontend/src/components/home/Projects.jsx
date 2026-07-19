@@ -1,19 +1,35 @@
 import { useMemo, useState } from 'react'
 import SectionCarousel from '../common/SectionCarousel'
-import { projectCategories, projects } from '../../data/projects'
 
 const projectVisibleCounts = { desktop: 3, tablet: 2, mobile: 1 }
 
-export default function Projects() {
+function getProjectYear(project) {
+  return project.completionDate ? new Date(project.completionDate).getFullYear() : ''
+}
+
+export default function Projects({ isLoading, projects = [] }) {
   const [activeFilter, setActiveFilter] = useState('All')
+
+  const visibleProjects = useMemo(
+    () =>
+      projects
+        .filter((project) => project.active !== false)
+        .sort((first, second) => (first.displayOrder ?? 0) - (second.displayOrder ?? 0)),
+    [projects],
+  )
+
+  const projectCategories = useMemo(
+    () => ['All', ...Array.from(new Set(visibleProjects.map((project) => project.category).filter(Boolean)))],
+    [visibleProjects],
+  )
 
   const filteredProjects = useMemo(() => {
     if (activeFilter === 'All') {
-      return projects
+      return visibleProjects
     }
 
-    return projects.filter((project) => project.category === activeFilter)
-  }, [activeFilter])
+    return visibleProjects.filter((project) => project.category === activeFilter)
+  }, [activeFilter, visibleProjects])
 
   return (
     <section className="projects-section section-block" id="projects">
@@ -24,6 +40,10 @@ export default function Projects() {
           </h2>
         </div>
 
+        {isLoading ? (
+          <div className="public-section-state" role="status">Loading projects...</div>
+        ) : visibleProjects.length ? (
+          <>
         <div className="projects-heading">
           <div className="filter-buttons" aria-label="Filter projects by category">
             {projectCategories.map((filter) => (
@@ -52,18 +72,22 @@ export default function Projects() {
           renderItem={(project) => (
             <article className="project-card">
               <div className="project-image">
-                <img src={project.coverImage} alt={project.title} />
+                {project.imageUrl ? <img src={project.imageUrl} alt={project.title} /> : null}
               </div>
               <div className="project-card-body">
                 <span className="project-category">{project.category}</span>
                 <h3>{project.title}</h3>
                 <p className="project-description">{project.description}</p>
                 <p className="project-meta">{project.location}</p>
-                <p className="project-year">{project.year}</p>
+                {getProjectYear(project) ? <p className="project-year">{getProjectYear(project)}</p> : null}
               </div>
             </article>
           )}
         />
+          </>
+        ) : (
+          <div className="public-section-state">Projects are being updated.</div>
+        )}
       </div>
     </section>
   )

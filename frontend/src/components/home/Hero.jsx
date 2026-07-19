@@ -1,13 +1,16 @@
 import heroImage from '../../assets/images/hero.png'
-import { settings } from '../../data/settings'
 
-export default function Hero() {
+export default function Hero({ isLoading, settings }) {
   const scrollToSection = (target) => {
     const section = document.getElementById(target)
     if (section) {
       section.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
+
+  const companyName = settings?.companyName || 'Abhinav Infratek'
+  const heroTitle = settings?.heroTitle || companyName
+  const heroSubtitle = settings?.heroSubtitle || settings?.aboutCompany || ''
 
   return (
     <section className="hero-section" id="top" aria-label="Abhinav Infratek introduction">
@@ -19,14 +22,9 @@ export default function Hero() {
       <div className="hero-content">
         <div className="container">
           <div className="hero-copy">
-            <p className="hero-kicker">{settings.companyTagline} - {settings.location}</p>
-            <h1 className="hero-title">
-              Modern construction shaped by <span>engineering clarity.</span>
-            </h1>
-            <p className="hero-subtitle">
-              Abhinav Infratek delivers building planning, architectural consultancy, interiors, structural guidance,
-              and turnkey civil execution for residential and commercial projects.
-            </p>
+            <p className="hero-kicker">{isLoading ? 'Loading company information...' : ''}</p>
+            <h1 className="hero-title">{isLoading ? 'Loading website content...' : heroTitle}</h1>
+            {heroSubtitle ? <p className="hero-subtitle">{heroSubtitle}</p> : null}
             <div className="hero-actions" aria-label="Hero actions">
               <button className="site-button site-button--light" type="button" onClick={() => scrollToSection('projects')}>
                 View Our Work

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import logo from '../../assets/images/company-logo.png'
-import { settings } from '../../data/settings'
 
 const navLinks = [
   { label: 'About', target: 'about' },
@@ -10,9 +9,12 @@ const navLinks = [
   { label: 'Contact', target: 'contact' },
 ]
 
-export default function Navbar() {
+export default function Navbar({ settings }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const companyName = settings?.companyName || 'Abhinav Infratek'
+  const tagline = settings?.tagline || 'Engineers & Architects'
+  const logoUrl = settings?.logoUrl || logo
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 24)
@@ -47,10 +49,10 @@ export default function Navbar() {
     <header className={`site-header ${isScrolled ? 'is-scrolled' : ''} ${isOpen ? 'is-open' : ''}`}>
       <nav className="site-nav container" aria-label="Primary navigation">
         <button className="brand-link" type="button" onClick={() => scrollToSection('top')} aria-label="Go to top">
-          <img className="brand-logo" src={logo} alt="Abhinav Infratek logo" />
+          <img className="brand-logo" src={logoUrl} alt={`${companyName} logo`} />
           <span className="brand-copy">
-            <span className="brand-name">{settings.companyName}</span>
-            <span className="brand-tagline">{settings.companyTagline}</span>
+            <span className="brand-name">{companyName}</span>
+            <span className="brand-tagline">{tagline}</span>
           </span>
         </button>
 

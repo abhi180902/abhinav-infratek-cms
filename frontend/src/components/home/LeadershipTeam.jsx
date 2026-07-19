@@ -1,8 +1,9 @@
-import { Mail, Phone } from 'lucide-react'
-import { getVisibleLeadershipMembers } from '../../data/leadership'
+import { UsersRound } from 'lucide-react'
 
-export default function LeadershipTeam() {
-  const visibleMembers = getVisibleLeadershipMembers()
+export default function LeadershipTeam({ isLoading, members = [] }) {
+  const visibleMembers = members
+    .filter((member) => member.active !== false)
+    .sort((first, second) => (first.displayOrder ?? 0) - (second.displayOrder ?? 0))
 
   return (
     <section className="leadership-section section-block" id="leadership">
@@ -13,38 +14,32 @@ export default function LeadershipTeam() {
           </h2>
         </div>
 
-        <div className="leadership-grid">
+        {isLoading ? (
+          <div className="public-section-state" role="status">Loading leadership team...</div>
+        ) : visibleMembers.length ? (
+          <div className="leadership-grid">
           {visibleMembers.map((member) => (
             <article className="leader-card" key={member.id}>
               <div className="leader-image">
-                <img src={member.photo} alt={member.fullName} />
+                {member.imageUrl ? (
+                  <img src={member.imageUrl} alt={member.name} />
+                ) : (
+                  <span className="leader-image-placeholder" aria-hidden="true">
+                    <UsersRound />
+                  </span>
+                )}
               </div>
               <div className="leader-content">
                 <p className="leader-role">{member.designation}</p>
-                <h3>{member.fullName}</h3>
+                <h3>{member.name}</h3>
                 <p className="leader-description">{member.bio}</p>
-                <div className="leader-actions">
-                  <a className="leader-icon-link" href={`tel:${member.phone.replaceAll(' ', '')}`} aria-label={`Call ${member.fullName}`}>
-                    <Phone aria-hidden="true" />
-                  </a>
-                  {member.email ? (
-                    <a className="leader-icon-link" href={`mailto:${member.email}`} aria-label={`Email ${member.fullName}`}>
-                      <Mail aria-hidden="true" />
-                    </a>
-                  ) : null}
-                  {member.linkedin ? (
-                    <a className="leader-icon-link" href={member.linkedin} aria-label={`${member.fullName} on LinkedIn`} target="_blank" rel="noreferrer">
-                      <span aria-hidden="true">in</span>
-                    </a>
-                  ) : null}
-                  <a className="leader-phone" href={`tel:${member.phone.replaceAll(' ', '')}`}>
-                    {member.phone}
-                  </a>
-                </div>
               </div>
             </article>
           ))}
-        </div>
+          </div>
+        ) : (
+          <div className="public-section-state">Leadership profiles are being updated.</div>
+        )}
       </div>
     </section>
   )

@@ -1,14 +1,16 @@
 import { Bell, ChevronDown, LogOut, Menu, UserRound } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../hooks/useAuth'
 import SearchBar from './SearchBar'
 
 export default function Topbar({ onMenuClick }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const { logout } = useAuth()
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    localStorage.removeItem('abhinav_admin_auth')
+    logout()
     navigate('/admin/login', { replace: true })
   }
 
@@ -34,7 +36,7 @@ export default function Topbar({ onMenuClick }) {
 
           {isProfileOpen ? (
             <div className="admin-profile-menu">
-              <button type="button">
+              <button type="button" onClick={() => navigate('/admin/account')}>
                 <UserRound aria-hidden="true" size={18} />
                 Admin Profile
               </button>
