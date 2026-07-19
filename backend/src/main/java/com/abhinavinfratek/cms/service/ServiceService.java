@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface ServiceService {
 
+    List<ServiceResponse> getActiveServices();
+
     List<ServiceResponse> getAllServices();
 
     ServiceResponse getServiceById(Long id);

@@ -1,11 +1,6 @@
 -- Abhinav Infratek CMS sample data
 -- PostgreSQL reference seed data aligned with current frontend mocks.
--- Password below is a placeholder hash; production seeding is handled by the backend seeder.
-
-INSERT INTO admin_users (full_name, email, password, role, active)
-VALUES
-    ('Abhinav Infratek Admin', 'admin@abhinavinfratek.com', '$2a$10$replace_with_backend_generated_bcrypt_hash', 'ADMIN', TRUE)
-ON CONFLICT (email) DO NOTHING;
+-- Administrator creation is handled by the backend seeder using environment variables.
 
 INSERT INTO services (slug, icon_key, title, description, display_order, active)
 VALUES

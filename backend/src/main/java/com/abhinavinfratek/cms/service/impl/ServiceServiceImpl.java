@@ -19,6 +19,14 @@ public class ServiceServiceImpl implements ServiceService {
     private final ServiceMapper serviceMapper;
 
     @Override
+    public List<ServiceResponse> getActiveServices() {
+        return serviceRepository.findByActiveTrueOrderByDisplayOrderAsc()
+                .stream()
+                .map(serviceMapper::toResponse)
+                .toList();
+    }
+
+    @Override
     public List<ServiceResponse> getAllServices() {
         return serviceRepository.findAll()
                 .stream()

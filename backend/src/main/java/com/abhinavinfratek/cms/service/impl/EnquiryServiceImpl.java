@@ -8,21 +8,33 @@ import com.abhinavinfratek.cms.exception.ResourceNotFoundException;
 import com.abhinavinfratek.cms.mapper.EnquiryMapper;
 import com.abhinavinfratek.cms.repository.EnquiryRepository;
 import com.abhinavinfratek.cms.service.EnquiryService;
+import com.abhinavinfratek.cms.service.MailService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class EnquiryServiceImpl implements EnquiryService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(EnquiryServiceImpl.class);
+
     private final EnquiryRepository enquiryRepository;
     private final EnquiryMapper enquiryMapper;
+    private final MailService mailService;
 
     @Override
     public EnquiryResponse createEnquiry(EnquiryRequest request) {
         Enquiry enquiry = enquiryMapper.toEntity(request);
-        return enquiryMapper.toResponse(enquiryRepository.save(enquiry));
+        Enquiry savedEnquiry = enquiryRepository.save(enquiry);
+        LOGGER.info("Enquiry saved successfully. id={}", savedEnquiry.getId());
+
+        sendCompanyNotification(savedEnquiry);
+        sendCustomerAcknowledgement(savedEnquiry);
+
+        return enquiryMapper.toResponse(savedEnquiry);
     }
 
     @Override
@@ -54,5 +66,23 @@ public class EnquiryServiceImpl implements EnquiryService {
     private Enquiry findEnquiryById(Long id) {
         return enquiryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Enquiry not found with id: " + id));
+    }
+
+    private void sendCompanyNotification(Enquiry enquiry) {
+        try {
+            mailService.sendCompanyNotification(enquiry);
+            LOGGER.info("Company notification email sent successfully. enquiryId={}", enquiry.getId());
+        } catch (RuntimeException exception) {
+            LOGGER.error("Failed to send company notification email. enquiryId={}", enquiry.getId(), exception);
+        }
+    }
+
+    private void sendCustomerAcknowledgement(Enquiry enquiry) {
+        try {
+            mailService.sendCustomerAcknowledgement(enquiry);
+            LOGGER.info("Customer acknowledgement email sent successfully. enquiryId={}", enquiry.getId());
+        } catch (RuntimeException exception) {
+            LOGGER.error("Failed to send customer acknowledgement email. enquiryId={}", enquiry.getId(), exception);
+        }
     }
 }

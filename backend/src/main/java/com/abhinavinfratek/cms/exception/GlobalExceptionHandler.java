@@ -40,6 +40,15 @@ public class GlobalExceptionHandler {
                 .body(buildError(HttpStatus.UNAUTHORIZED, exception.getMessage(), request.getRequestURI(), null));
     }
 
+    @ExceptionHandler(AdminAccountException.class)
+    public ResponseEntity<ErrorResponse> handleAdminAccountException(
+            AdminAccountException exception,
+            HttpServletRequest request
+    ) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(buildError(HttpStatus.BAD_REQUEST, exception.getMessage(), request.getRequestURI(), null));
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(
             ResourceNotFoundException exception,

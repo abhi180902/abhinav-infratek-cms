@@ -1,10 +1,25 @@
 HELP.md
+
+### Maven ###
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
+### Environment Files ###
+.env
+.env.*
+!.env.example
+
+### Local Application Config ###
+application-local.properties
+application-secrets.properties
+
+### Logs ###
+logs/
+*.log
+
+### STS / Eclipse ###
 .apt_generated
 .classpath
 .factorypath
@@ -14,10 +29,13 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
+
+### VS Code ###
+.vscode/
 
 ### NetBeans ###
 /nbproject/private/
@@ -29,5 +47,6 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+### OS Files ###
+.DS_Store
+Thumbs.db
