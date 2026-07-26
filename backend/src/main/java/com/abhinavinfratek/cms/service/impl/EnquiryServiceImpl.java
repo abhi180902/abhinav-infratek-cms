@@ -31,8 +31,7 @@ public class EnquiryServiceImpl implements EnquiryService {
         Enquiry savedEnquiry = enquiryRepository.save(enquiry);
         LOGGER.info("Enquiry saved successfully. id={}", savedEnquiry.getId());
 
-        sendCompanyNotification(savedEnquiry);
-        sendCustomerAcknowledgement(savedEnquiry);
+        mailService.sendEnquiryEmails(savedEnquiry);
 
         return enquiryMapper.toResponse(savedEnquiry);
     }
@@ -68,21 +67,4 @@ public class EnquiryServiceImpl implements EnquiryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Enquiry not found with id: " + id));
     }
 
-    private void sendCompanyNotification(Enquiry enquiry) {
-        try {
-            mailService.sendCompanyNotification(enquiry);
-            LOGGER.info("Company notification email sent successfully. enquiryId={}", enquiry.getId());
-        } catch (RuntimeException exception) {
-            LOGGER.error("Failed to send company notification email. enquiryId={}", enquiry.getId(), exception);
-        }
-    }
-
-    private void sendCustomerAcknowledgement(Enquiry enquiry) {
-        try {
-            mailService.sendCustomerAcknowledgement(enquiry);
-            LOGGER.info("Customer acknowledgement email sent successfully. enquiryId={}", enquiry.getId());
-        } catch (RuntimeException exception) {
-            LOGGER.error("Failed to send customer acknowledgement email. enquiryId={}", enquiry.getId(), exception);
-        }
-    }
 }
