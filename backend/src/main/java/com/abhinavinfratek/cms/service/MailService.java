@@ -4,5 +4,7 @@ import com.abhinavinfratek.cms.entity.Enquiry;
 
 public interface MailService {
 
-    void sendEnquiryEmails(Enquiry enquiry);
+    void sendCompanyNotification(Enquiry enquiry);
+
+    void sendCustomerAcknowledgement(Enquiry enquiry);
 }

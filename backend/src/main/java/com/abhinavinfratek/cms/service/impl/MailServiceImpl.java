@@ -9,14 +9,11 @@ import jakarta.mail.internet.MimeMessage;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
@@ -24,7 +21,6 @@ import org.springframework.web.util.HtmlUtils;
 @RequiredArgsConstructor
 public class MailServiceImpl implements MailService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
     private static final String COMPANY_TAGLINE = "Engineers & Architects";
     private static final String COMPANY_NOTIFICATION_SUBJECT = "New Website Enquiry - Abhinav Infratek";
     private static final String CUSTOMER_ACKNOWLEDGEMENT_SUBJECT = "Thank You for Contacting Abhinav Infratek";
@@ -40,41 +36,17 @@ public class MailServiceImpl implements MailService {
     private String fromEmail;
 
     @Override
-    @Async("applicationTaskExecutor")
-    public void sendEnquiryEmails(Enquiry enquiry) {
-        SiteSettingsResponse settings = getSettingsSafely();
-        sendCompanyNotification(enquiry, settings);
-        sendCustomerAcknowledgement(enquiry, settings);
-    }
-
-    private void sendCompanyNotification(Enquiry enquiry, SiteSettingsResponse settings) {
-        try {
-            sendCompanyNotificationEmail(enquiry, settings);
-            LOGGER.info("Company notification email sent successfully. enquiryId={}", enquiry.getId());
-        } catch (RuntimeException exception) {
-            LOGGER.error("Failed to send company notification email. enquiryId={}", enquiry.getId(), exception);
-        }
-    }
-
-    private void sendCustomerAcknowledgement(Enquiry enquiry, SiteSettingsResponse settings) {
-        try {
-            sendCustomerAcknowledgementEmail(enquiry, settings);
-            LOGGER.info("Customer acknowledgement email sent successfully. enquiryId={}", enquiry.getId());
-        } catch (RuntimeException exception) {
-            LOGGER.error("Failed to send customer acknowledgement email. enquiryId={}", enquiry.getId(), exception);
-        }
-    }
-
-    private void sendCompanyNotificationEmail(Enquiry enquiry, SiteSettingsResponse settings) {
+    public void sendCompanyNotification(Enquiry enquiry) {
         sendHtmlEmail(
                 companyEmail,
                 COMPANY_NOTIFICATION_SUBJECT,
-                buildCompanyNotificationHtml(enquiry, settings),
+                buildCompanyNotificationHtml(enquiry, getSettingsSafely()),
                 enquiry.getEmail()
         );
     }
 
-    private void sendCustomerAcknowledgementEmail(Enquiry enquiry, SiteSettingsResponse settings) {
+    @Override
+    public void sendCustomerAcknowledgement(Enquiry enquiry) {
         if (enquiry.getEmail() == null || enquiry.getEmail().isBlank()) {
             return;
         }
@@ -82,7 +54,7 @@ public class MailServiceImpl implements MailService {
         sendHtmlEmail(
                 enquiry.getEmail(),
                 CUSTOMER_ACKNOWLEDGEMENT_SUBJECT,
-                buildCustomerAcknowledgementHtml(enquiry, settings),
+                buildCustomerAcknowledgementHtml(enquiry, getSettingsSafely()),
                 null
         );
     }
