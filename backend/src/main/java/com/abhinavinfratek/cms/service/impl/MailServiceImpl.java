@@ -1,44 +1,41 @@
 package com.abhinavinfratek.cms.service.impl;
 
+import com.abhinavinfratek.cms.config.ResendProperties;
+import com.abhinavinfratek.cms.dto.ResendEmailRequest;
 import com.abhinavinfratek.cms.dto.SiteSettingsResponse;
 import com.abhinavinfratek.cms.entity.Enquiry;
 import com.abhinavinfratek.cms.service.MailService;
 import com.abhinavinfratek.cms.service.SiteSettingsService;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Locale;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
-import org.springframework.mail.MailSendException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.HtmlUtils;
+import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
 public class MailServiceImpl implements MailService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
     private static final String COMPANY_TAGLINE = "Engineers & Architects";
     private static final String COMPANY_NOTIFICATION_SUBJECT = "New Website Enquiry - Abhinav Infratek";
     private static final String CUSTOMER_ACKNOWLEDGEMENT_SUBJECT = "Thank You for Contacting Abhinav Infratek";
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a", Locale.ENGLISH);
 
-    private final JavaMailSender javaMailSender;
+    private final WebClient resendWebClient;
+    private final ResendProperties resendProperties;
     private final SiteSettingsService siteSettingsService;
-
-    @Value("${mail.company.email}")
-    private String companyEmail;
-
-    @Value("${spring.mail.username:}")
-    private String fromEmail;
 
     @Override
     public void sendCompanyNotification(Enquiry enquiry) {
         sendHtmlEmail(
-                companyEmail,
+                resendProperties.companyEmail(),
                 COMPANY_NOTIFICATION_SUBJECT,
                 buildCompanyNotificationHtml(enquiry, getSettingsSafely()),
                 enquiry.getEmail()
@@ -61,30 +58,49 @@ public class MailServiceImpl implements MailService {
 
     private void sendHtmlEmail(String to, String subject, String html, String replyTo) {
         if (to == null || to.isBlank()) {
-            throw new MailSendException("Recipient email address is required");
+            throw new IllegalArgumentException("Recipient email address is required");
         }
 
-        try {
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setTo(to.trim());
-            helper.setSubject(subject);
-            helper.setText(html, true);
+        ResendEmailRequest request = new ResendEmailRequest(
+                resendProperties.fromEmail(),
+                List.of(to.trim()),
+                subject,
+                html,
+                normalizeReplyTo(replyTo)
+        );
 
-            if (fromEmail != null && !fromEmail.isBlank()) {
-                helper.setFrom(fromEmail.trim());
-            }
+        LOGGER.info("Sending email through Resend. recipient={}, subject={}", to.trim(), subject);
 
-            if (replyTo != null && !replyTo.isBlank()) {
-                helper.setReplyTo(replyTo.trim());
-            }
+        resendWebClient.post()
+                .uri("/emails")
+                .bodyValue(request)
+                .exchangeToMono(response -> handleResendResponse(response.statusCode(), response.bodyToMono(String.class), to.trim(), subject))
+                .block();
 
-            javaMailSender.send(message);
-        } catch (MessagingException exception) {
-            throw new MailSendException("Failed to prepare HTML email", exception);
-        } catch (MailException exception) {
-            throw exception;
+        LOGGER.info("Email sent successfully through Resend. recipient={}, subject={}", to.trim(), subject);
+    }
+
+    private Mono<Void> handleResendResponse(HttpStatusCode statusCode, Mono<String> responseBody, String recipient, String subject) {
+        if (statusCode.is2xxSuccessful()) {
+            return responseBody.then();
         }
+
+        return responseBody
+                .defaultIfEmpty("")
+                .flatMap(body -> {
+                    LOGGER.error(
+                            "Resend email failed. statusCode={}, responseBody={}, recipient={}, subject={}",
+                            statusCode.value(),
+                            body,
+                            recipient,
+                            subject
+                    );
+                    return Mono.error(new RuntimeException("Resend email failed with status code: " + statusCode.value()));
+                });
+    }
+
+    private String normalizeReplyTo(String replyTo) {
+        return replyTo == null || replyTo.isBlank() ? null : replyTo.trim();
     }
 
     private SiteSettingsResponse getSettingsSafely() {
