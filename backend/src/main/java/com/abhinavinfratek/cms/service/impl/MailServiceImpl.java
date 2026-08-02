@@ -55,6 +55,22 @@ public class MailServiceImpl implements MailService {
                 null
         );
     }
+    
+    private String maskEmail(String email) {
+        if (email == null || !email.contains("@")) {
+            return "unknown";
+        }
+
+        String[] parts = email.split("@", 2);
+        String local = parts[0];
+        String domain = parts[1];
+
+        if (local.length() <= 2) {
+            return "**@" + domain;
+        }
+
+        return local.substring(0, 2) + "****@" + domain;
+    }
 
     private void sendHtmlEmail(String to, String subject, String html, String replyTo) {
         if (to == null || to.isBlank()) {
@@ -69,7 +85,11 @@ public class MailServiceImpl implements MailService {
                 normalizeReplyTo(replyTo)
         );
 
-        LOGGER.info("Sending email through Resend. recipient={}, subject={}", to.trim(), subject);
+        LOGGER.info(
+        	    "Sending email through Resend. recipient={}, subject={}",
+        	    maskEmail(to.trim()),
+        	    subject
+        	);
 
         resendWebClient.post()
                 .uri("/emails")
@@ -77,7 +97,11 @@ public class MailServiceImpl implements MailService {
                 .exchangeToMono(response -> handleResendResponse(response.statusCode(), response.bodyToMono(String.class), to.trim(), subject))
                 .block();
 
-        LOGGER.info("Email sent successfully through Resend. recipient={}, subject={}", to.trim(), subject);
+        LOGGER.info(
+        	    "Email sent successfully through Resend. recipient={}, subject={}",
+        	    maskEmail(to.trim()),
+        	    subject
+        	);
     }
 
     private Mono<Void> handleResendResponse(HttpStatusCode statusCode, Mono<String> responseBody, String recipient, String subject) {
@@ -88,13 +112,13 @@ public class MailServiceImpl implements MailService {
         return responseBody
                 .defaultIfEmpty("")
                 .flatMap(body -> {
-                    LOGGER.error(
-                            "Resend email failed. statusCode={}, responseBody={}, recipient={}, subject={}",
-                            statusCode.value(),
-                            body,
-                            recipient,
-                            subject
-                    );
+                	LOGGER.error(
+                	        "Resend email failed. statusCode={}, responseBody={}, recipient={}, subject={}",
+                	        statusCode.value(),
+                	        body,
+                	        maskEmail(recipient),
+                	        subject
+                	);
                     return Mono.error(new RuntimeException("Resend email failed with status code: " + statusCode.value()));
                 });
     }
