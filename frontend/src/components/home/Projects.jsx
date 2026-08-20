@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import SectionCarousel from '../common/SectionCarousel'
 
 const projectVisibleCounts = { desktop: 3, tablet: 2, mobile: 1 }
@@ -80,6 +81,10 @@ export default function Projects({ isLoading, projects = [] }) {
                 <p className="project-description">{project.description}</p>
                 <p className="project-meta">{project.location}</p>
                 {getProjectYear(project) ? <p className="project-year">{getProjectYear(project)}</p> : null}
+                <Link className="project-see-more" to={`/projects/${project.slug}`}>
+                  See More
+                  <span aria-hidden="true">-&gt;</span>
+                </Link>
               </div>
             </article>
           )}

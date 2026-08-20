@@ -1,4 +1,5 @@
 import logo from '../../assets/images/company-logo.png'
+import { buildWhatsAppUrl } from '../../utils/contactLinks'
 
 const quickLinks = [
   { label: 'About', href: '#about' },
@@ -8,15 +9,20 @@ const quickLinks = [
   { label: 'Contact', href: '#contact' },
 ]
 
-export default function Footer({ services = [], settings }) {
+const socialLinks = [
+  { key: 'facebookUrl', label: 'Facebook' },
+  { key: 'instagramUrl', label: 'Instagram' },
+  { key: 'linkedinUrl', label: 'LinkedIn' },
+  { key: 'youtubeUrl', label: 'YouTube' },
+]
+
+export default function Footer({ settings }) {
   const companyName = settings?.companyName || 'Abhinav Infratek'
   const tagline = settings?.tagline || 'Engineers & Architects'
   const logoUrl = settings?.logoUrl || logo
   const phones = [settings?.phone, settings?.alternatePhone].filter(Boolean)
-  const visibleServices = services
-    .filter((service) => service.active !== false)
-    .sort((first, second) => (first.displayOrder ?? 0) - (second.displayOrder ?? 0))
-    .slice(0, 5)
+  const whatsappUrl = buildWhatsAppUrl(settings?.whatsappNumber)
+  const visibleSocialLinks = socialLinks.filter((link) => settings?.[link.key])
 
   return (
     <footer className="site-footer">
@@ -43,17 +49,6 @@ export default function Footer({ services = [], settings }) {
           </nav>
         </div>
 
-        <div className="footer-column">
-          <h2>Services</h2>
-          <nav aria-label="Footer services">
-            {visibleServices.map((service) => (
-              <a href="#services" key={service.id}>
-                {service.title}
-              </a>
-            ))}
-          </nav>
-        </div>
-
         <div className="footer-column footer-contact">
           <h2>Contact Information</h2>
           <address>
@@ -64,8 +59,26 @@ export default function Footer({ services = [], settings }) {
                 {phone}
               </a>
             ))}
+            {settings?.whatsappNumber && whatsappUrl ? (
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                WhatsApp: {settings.whatsappNumber}
+              </a>
+            ) : null}
           </address>
         </div>
+
+        {visibleSocialLinks.length ? (
+          <div className="footer-column">
+            <h2>Social Links</h2>
+            <nav aria-label="Footer social links">
+              {visibleSocialLinks.map((link) => (
+                <a href={settings[link.key]} key={link.key} target="_blank" rel="noopener noreferrer">
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+        ) : null}
       </div>
 
       <div className="container footer-bottom">

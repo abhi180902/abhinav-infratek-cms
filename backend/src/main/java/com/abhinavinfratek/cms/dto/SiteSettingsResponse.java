@@ -13,6 +13,7 @@ public class SiteSettingsResponse {
     private final String tagline;
     private final String phone;
     private final String alternatePhone;
+    private final String whatsappNumber;
     private final String email;
     private final String address;
     private final String heroTitle;

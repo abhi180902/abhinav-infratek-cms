@@ -1,9 +1,12 @@
 package com.abhinavinfratek.cms.mapper;
 
 import com.abhinavinfratek.cms.dto.ImageUploadResponse;
+import com.abhinavinfratek.cms.dto.ProjectImageResponse;
 import com.abhinavinfratek.cms.dto.ProjectRequest;
 import com.abhinavinfratek.cms.dto.ProjectResponse;
 import com.abhinavinfratek.cms.entity.Project;
+import com.abhinavinfratek.cms.entity.ProjectImage;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,6 +46,10 @@ public class ProjectMapper {
     }
 
     public ProjectResponse toResponse(Project project) {
+        return toResponse(project, true);
+    }
+
+    public ProjectResponse toResponse(Project project, boolean includeGalleryImages) {
         return ProjectResponse.builder()
                 .id(project.getId())
                 .title(project.getTitle())
@@ -53,11 +60,30 @@ public class ProjectMapper {
                 .completionDate(project.getCompletionDate())
                 .imageUrl(project.getImageUrl())
                 .imagePublicId(project.getImagePublicId())
+                .images(includeGalleryImages ? project.getImages().stream().map(this::toImageResponse).toList() : List.of())
                 .displayOrder(project.getDisplayOrder())
                 .featured(project.getFeatured())
                 .active(project.getActive())
                 .createdAt(project.getCreatedAt())
                 .updatedAt(project.getUpdatedAt())
+                .build();
+    }
+
+    public ProjectImage toProjectImage(ImageUploadResponse image, int displayOrder) {
+        return ProjectImage.builder()
+                .imageUrl(image.getSecureUrl())
+                .imagePublicId(image.getPublicId())
+                .displayOrder(displayOrder)
+                .build();
+    }
+
+    public ProjectImageResponse toImageResponse(ProjectImage image) {
+        return ProjectImageResponse.builder()
+                .id(image.getId())
+                .imageUrl(image.getImageUrl())
+                .imagePublicId(image.getImagePublicId())
+                .displayOrder(image.getDisplayOrder())
+                .createdAt(image.getCreatedAt())
                 .build();
     }
 

@@ -17,6 +17,10 @@ function getVisibleCount(counts) {
   return counts.desktop
 }
 
+function getCardScrollLeft(track, target) {
+  return target.offsetLeft - track.offsetLeft
+}
+
 export default function SectionCarousel({
   className = '',
   controlsClassName = '',
@@ -52,12 +56,12 @@ export default function SectionCarousel({
     const target = track?.children[currentIndex]
 
     if (target) {
-      track.scrollTo({ left: target.offsetLeft, behavior: 'smooth' })
+      track.scrollTo({ left: getCardScrollLeft(track, target), behavior: 'smooth' })
     }
   }, [currentIndex, items.length, resetKey])
 
-  const scrollTo = (direction) => {
-    let index = currentIndex + direction * visibleCards
+  const moveToIndex = (nextIndex) => {
+    let index = nextIndex
 
     if (index > maxIndex) {
       index = 0
@@ -73,17 +77,25 @@ export default function SectionCarousel({
     setActiveIndex(index)
 
     if (target) {
-      track.scrollTo({ left: target.offsetLeft, behavior: 'smooth' })
+      track.scrollTo({ left: getCardScrollLeft(track, target), behavior: 'smooth' })
     }
+  }
+
+  const handlePrevious = () => {
+    moveToIndex(currentIndex - visibleCards)
+  }
+
+  const handleNext = () => {
+    moveToIndex(currentIndex + visibleCards)
   }
 
   return (
     <div className={`carousel-shell ${className}`} style={{ '--cards-visible': visibleCards }}>
       <div className={`carousel-controls ${controlsClassName}`} aria-label={controlsLabel}>
-        <button className="carousel-arrow" type="button" onClick={() => scrollTo(-1)} aria-label="Previous">
+        <button className="carousel-arrow" type="button" onClick={handlePrevious} aria-label="Previous">
           <ChevronLeft aria-hidden="true" />
         </button>
-        <button className="carousel-arrow" type="button" onClick={() => scrollTo(1)} aria-label="Next">
+        <button className="carousel-arrow" type="button" onClick={handleNext} aria-label="Next">
           <ChevronRight aria-hidden="true" />
         </button>
       </div>

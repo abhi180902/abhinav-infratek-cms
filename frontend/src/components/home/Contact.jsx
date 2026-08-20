@@ -1,6 +1,7 @@
 import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react'
 import { useState } from 'react'
 import { submitPublicEnquiry } from '../../services/publicWebsiteService'
+import { buildWhatsAppUrl } from '../../utils/contactLinks'
 
 const defaultFormValues = {
   email: '',
@@ -52,6 +53,7 @@ export default function Contact({ isLoading, settings }) {
   const [successMessage, setSuccessMessage] = useState('')
 
   const phones = [settings?.phone, settings?.alternatePhone].filter(Boolean)
+  const whatsappUrl = buildWhatsAppUrl(settings?.whatsappNumber)
   const contactItems = [
     {
       id: 'address',
@@ -73,16 +75,20 @@ export default function Contact({ isLoading, settings }) {
       label: 'Phone Numbers',
       value: phones.join(' / '),
     },
-    {
-      href: 'https://wa.me/919483787605',
+    settings?.whatsappNumber
+      ? {
+      href: whatsappUrl,
       id: 'whatsapp',
       icon: MessageCircle,
       label: 'WhatsApp',
       target: '_blank',
       rel: 'noopener noreferrer',
-      value: '+91 94837 87605',
-    },
-  ].filter((item) => item.value)
+      value: settings.whatsappNumber,
+    }
+      : null,
+  ]
+    .filter(Boolean)
+    .filter((item) => item.value)
 
   const updateField = (event) => {
     const { name, value } = event.target

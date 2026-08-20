@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,4 +46,10 @@ public class ProjectRequest {
     private Boolean active;
 
     private MultipartFile image;
+
+    private MultipartFile coverImage;
+
+    private List<MultipartFile> galleryImages = new ArrayList<>();
+
+    private List<Long> removeImageIds = new ArrayList<>();
 }

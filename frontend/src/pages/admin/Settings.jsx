@@ -19,6 +19,7 @@ const defaultFormValues = {
   logo: null,
   phone: '',
   tagline: '',
+  whatsappNumber: '',
   youtubeUrl: '',
 }
 
@@ -38,6 +39,7 @@ function normalizeSettings(settings) {
     logo: null,
     phone: settings.phone ?? '',
     tagline: settings.tagline ?? '',
+    whatsappNumber: settings.whatsappNumber ?? '',
     youtubeUrl: settings.youtubeUrl ?? '',
   }
 }
@@ -58,6 +60,7 @@ function createPayload(values) {
     logo: values.logo,
     phone: values.phone.trim(),
     tagline: values.tagline.trim(),
+    whatsappNumber: values.whatsappNumber.trim(),
     youtubeUrl: values.youtubeUrl.trim(),
   }
 }
@@ -280,6 +283,17 @@ export default function Settings() {
                   <label htmlFor="settings-alternate-phone">Alternate Phone</label>
                   <input id="settings-alternate-phone" name="alternatePhone" value={formValues.alternatePhone} onChange={updateField} />
                   {renderFieldError('alternatePhone')}
+                </div>
+                <div className="admin-field">
+                  <label htmlFor="settings-whatsapp">WhatsApp Number</label>
+                  <input
+                    id="settings-whatsapp"
+                    name="whatsappNumber"
+                    placeholder="+91 XXXXX XXXXX"
+                    value={formValues.whatsappNumber}
+                    onChange={updateField}
+                  />
+                  {renderFieldError('whatsappNumber')}
                 </div>
                 <div className="admin-field">
                   <label htmlFor="settings-email">Email</label>

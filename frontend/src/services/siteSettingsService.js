@@ -16,6 +16,7 @@ function toSiteSettingsFormData(payload) {
   appendFormValue(formData, 'tagline', payload.tagline)
   appendFormValue(formData, 'phone', payload.phone)
   appendFormValue(formData, 'alternatePhone', payload.alternatePhone)
+  appendFormValue(formData, 'whatsappNumber', payload.whatsappNumber)
   appendFormValue(formData, 'email', payload.email)
   appendFormValue(formData, 'address', payload.address)
   appendFormValue(formData, 'heroTitle', payload.heroTitle)

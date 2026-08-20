@@ -2,6 +2,7 @@ package com.abhinavinfratek.cms.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,6 +19,7 @@ public class ProjectResponse {
     private final LocalDate completionDate;
     private final String imageUrl;
     private final String imagePublicId;
+    private final List<ProjectImageResponse> images;
     private final Integer displayOrder;
     private final Boolean featured;
     private final Boolean active;

@@ -40,6 +40,9 @@ public class SiteSettings {
     @Column(name = "alternate_phone", length = 40)
     private String alternatePhone;
 
+    @Column(name = "whatsapp_number", length = 40)
+    private String whatsappNumber;
+
     @Column(length = 160)
     private String email;
 

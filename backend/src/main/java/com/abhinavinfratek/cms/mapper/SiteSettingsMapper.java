@@ -14,6 +14,7 @@ public class SiteSettingsMapper {
         siteSettings.setTagline(normalizeOptional(request.getTagline()));
         siteSettings.setPhone(normalizeOptional(request.getPhone()));
         siteSettings.setAlternatePhone(normalizeOptional(request.getAlternatePhone()));
+        siteSettings.setWhatsappNumber(normalizeOptional(request.getWhatsappNumber()));
         siteSettings.setEmail(normalizeOptional(request.getEmail()));
         siteSettings.setAddress(normalizeOptional(request.getAddress()));
         siteSettings.setHeroTitle(normalizeOptional(request.getHeroTitle()));
@@ -38,6 +39,7 @@ public class SiteSettingsMapper {
                 .tagline(siteSettings.getTagline())
                 .phone(siteSettings.getPhone())
                 .alternatePhone(siteSettings.getAlternatePhone())
+                .whatsappNumber(siteSettings.getWhatsappNumber())
                 .email(siteSettings.getEmail())
                 .address(siteSettings.getAddress())
                 .heroTitle(siteSettings.getHeroTitle())

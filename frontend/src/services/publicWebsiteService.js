@@ -18,6 +18,10 @@ export async function getPublicProjects() {
   return readPublicEndpoint(API_ENDPOINTS.public.projects)
 }
 
+export async function getPublicProject(slug) {
+  return readPublicEndpoint(`${API_ENDPOINTS.public.projects}/${slug}`)
+}
+
 export async function getPublicLeadershipMembers() {
   return readPublicEndpoint(API_ENDPOINTS.public.leadershipTeam)
 }

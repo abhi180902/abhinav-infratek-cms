@@ -2,6 +2,7 @@ package com.abhinavinfratek.cms.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,13 @@ public class SiteSettingsRequest {
 
     @Size(max = 40, message = "Alternate phone must not exceed 40 characters")
     private String alternatePhone;
+
+    @Pattern(
+            regexp = "^\\s*$|^\\+?[0-9][0-9\\s-]{7,24}[0-9]$",
+            message = "WhatsApp number must include a valid country code and phone number"
+    )
+    @Size(max = 40, message = "WhatsApp number must not exceed 40 characters")
+    private String whatsappNumber;
 
     @Email(message = "Email must be valid")
     @Size(max = 160, message = "Email must not exceed 160 characters")

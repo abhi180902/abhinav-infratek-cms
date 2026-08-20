@@ -15,8 +15,10 @@ const defaultFormValues = {
   description: '',
   displayOrder: 0,
   featured: false,
-  image: null,
+  coverImage: null,
+  galleryImages: [],
   location: '',
+  removeImageIds: [],
   slug: '',
   title: '',
 }
@@ -29,8 +31,10 @@ function normalizeProject(project) {
     description: project.description ?? '',
     displayOrder: project.displayOrder ?? 0,
     featured: project.featured ?? false,
-    image: null,
+    coverImage: null,
+    galleryImages: [],
     location: project.location ?? '',
+    removeImageIds: [],
     slug: project.slug ?? '',
     title: project.title ?? '',
   }
@@ -44,10 +48,20 @@ function createPayload(values) {
     description: values.description.trim(),
     displayOrder: Number(values.displayOrder),
     featured: values.featured,
-    image: values.image,
+    coverImage: values.coverImage?.file ?? null,
+    galleryImages: values.galleryImages.map((image) => image.file),
     location: values.location.trim(),
+    removeImageIds: values.removeImageIds,
     slug: values.slug.trim(),
     title: values.title.trim(),
+  }
+}
+
+function createPreviewImage(file) {
+  return {
+    id: `${file.name}-${file.lastModified}-${Math.random().toString(36).slice(2)}`,
+    file,
+    previewUrl: URL.createObjectURL(file),
   }
 }
 
@@ -177,6 +191,10 @@ export default function Projects() {
       return
     }
 
+    if (formValues.coverImage?.previewUrl) {
+      URL.revokeObjectURL(formValues.coverImage.previewUrl)
+    }
+    formValues.galleryImages.forEach((image) => URL.revokeObjectURL(image.previewUrl))
     setEditingProject(null)
     setFormError('')
     setFormErrors({})
@@ -203,10 +221,64 @@ export default function Projects() {
   const updateField = (event) => {
     const { checked, files, name, type, value } = event.target
 
+    if (name === 'coverImage') {
+      setFormValues((currentValues) => ({
+        ...currentValues,
+        coverImage: (() => {
+          if (currentValues.coverImage?.previewUrl) {
+            URL.revokeObjectURL(currentValues.coverImage.previewUrl)
+          }
+
+          return files[0] ? createPreviewImage(files[0]) : null
+        })(),
+      }))
+      return
+    }
+
+    if (name === 'galleryImages') {
+      const selectedImages = Array.from(files ?? []).map(createPreviewImage)
+
+      setFormValues((currentValues) => ({
+        ...currentValues,
+        galleryImages: [...currentValues.galleryImages, ...selectedImages],
+      }))
+
+      event.target.value = ''
+      return
+    }
+
     setFormValues((currentValues) => ({
       ...currentValues,
       [name]: type === 'checkbox' ? checked : type === 'file' ? files[0] ?? null : value,
     }))
+  }
+
+  const removeSelectedGalleryImage = (imageId) => {
+    setFormValues((currentValues) => {
+      const imageToRemove = currentValues.galleryImages.find((image) => image.id === imageId)
+
+      if (imageToRemove?.previewUrl) {
+        URL.revokeObjectURL(imageToRemove.previewUrl)
+      }
+
+      return {
+        ...currentValues,
+        galleryImages: currentValues.galleryImages.filter((image) => image.id !== imageId),
+      }
+    })
+  }
+
+  const toggleExistingGalleryImageRemoval = (imageId) => {
+    setFormValues((currentValues) => {
+      const isMarked = currentValues.removeImageIds.includes(imageId)
+
+      return {
+        ...currentValues,
+        removeImageIds: isMarked
+          ? currentValues.removeImageIds.filter((currentImageId) => currentImageId !== imageId)
+          : [...currentValues.removeImageIds, imageId],
+      }
+    })
   }
 
   const handleSubmit = async (event) => {
@@ -471,10 +543,71 @@ export default function Projects() {
           </div>
 
           <div className="admin-field">
-            <label htmlFor="project-image">Project Image</label>
-            <input id="project-image" name="image" type="file" accept="image/jpeg,image/png,image/webp" onChange={updateField} required={!editingProject} />
-            {editingProject?.imageUrl ? <small className="admin-help-text">Leave empty to keep the existing image.</small> : null}
+            <label htmlFor="project-cover-image">Cover Image</label>
+            <input
+              id="project-cover-image"
+              name="coverImage"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={updateField}
+              required={!editingProject}
+            />
+            {editingProject?.imageUrl ? <small className="admin-help-text">Leave empty to keep the existing cover image.</small> : null}
+            {formValues.coverImage ? (
+              <div className="admin-media-preview-grid">
+                <div className="admin-media-preview-card">
+                  <img src={formValues.coverImage.previewUrl} alt="Selected cover preview" />
+                  <span>{formValues.coverImage.file.name}</span>
+                </div>
+              </div>
+            ) : null}
+            {renderFieldError('coverImage')}
             {renderFieldError('image')}
+          </div>
+
+          <div className="admin-field">
+            <label htmlFor="project-gallery-images">Project Gallery</label>
+            <input
+              id="project-gallery-images"
+              name="galleryImages"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              onChange={updateField}
+            />
+            <small className="admin-help-text">Choose multiple additional images for this project's gallery.</small>
+            {renderFieldError('galleryImages')}
+
+            {editingProject?.images?.length ? (
+              <div className="admin-media-preview-grid" aria-label="Existing gallery images">
+                {editingProject.images.map((image) => {
+                  const isMarked = formValues.removeImageIds.includes(image.id)
+
+                  return (
+                    <div className={`admin-media-preview-card ${isMarked ? 'is-marked-for-removal' : ''}`} key={image.id}>
+                      <img src={image.imageUrl} alt={`${editingProject.title} gallery`} />
+                      <button type="button" onClick={() => toggleExistingGalleryImageRemoval(image.id)}>
+                        {isMarked ? 'Undo' : 'Remove'}
+                      </button>
+                    </div>
+                  )
+                })}
+              </div>
+            ) : null}
+
+            {formValues.galleryImages.length ? (
+              <div className="admin-media-preview-grid" aria-label="Selected gallery images">
+                {formValues.galleryImages.map((image) => (
+                  <div className="admin-media-preview-card" key={image.id}>
+                    <img src={image.previewUrl} alt={`${image.file.name} preview`} />
+                    <span>{image.file.name}</span>
+                    <button type="button" onClick={() => removeSelectedGalleryImage(image.id)}>
+                      Remove
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
 
           <div className="admin-form-grid">

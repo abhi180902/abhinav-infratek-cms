@@ -105,6 +105,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
     tagline VARCHAR(200),
     phone VARCHAR(40),
     alternate_phone VARCHAR(40),
+    whatsapp_number VARCHAR(40),
     email VARCHAR(160),
     address TEXT,
     hero_title VARCHAR(200),
@@ -120,3 +121,18 @@ CREATE TABLE IF NOT EXISTS site_settings (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS project_images (
+    id BIGSERIAL PRIMARY KEY,
+    project_id BIGINT NOT NULL,
+    image_url TEXT NOT NULL,
+    image_public_id VARCHAR(255) NOT NULL UNIQUE,
+    display_order INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_project_images_project
+        FOREIGN KEY (project_id)
+        REFERENCES projects (id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_project_images_project_order ON project_images (project_id, display_order);

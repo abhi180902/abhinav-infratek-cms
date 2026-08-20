@@ -22,6 +22,18 @@ VALUES
     ('Business Center Fitout', 'business-center-fitout', 'Functional commercial space planning with structural coordination and turnkey support.', 'Commercial', 'Ranebennur, Karnataka', '2025-01-20', 'https://res.cloudinary.com/demo/image/upload/abhinav-infratek/projects/business-center-fitout.jpg', 'abhinav-infratek/projects/business-center-fitout', 2, FALSE, TRUE)
 ON CONFLICT (slug) DO NOTHING;
 
+INSERT INTO project_images (project_id, image_url, image_public_id, display_order)
+SELECT p.id, 'https://res.cloudinary.com/demo/image/upload/abhinav-infratek/projects/gallery/urban-residence-living.jpg', 'abhinav-infratek/projects/gallery/urban-residence-living', 1
+FROM projects p
+WHERE p.slug = 'urban-residence'
+ON CONFLICT (image_public_id) DO NOTHING;
+
+INSERT INTO project_images (project_id, image_url, image_public_id, display_order)
+SELECT p.id, 'https://res.cloudinary.com/demo/image/upload/abhinav-infratek/projects/gallery/business-center-interior.jpg', 'abhinav-infratek/projects/gallery/business-center-interior', 1
+FROM projects p
+WHERE p.slug = 'business-center-fitout'
+ON CONFLICT (image_public_id) DO NOTHING;
+
 INSERT INTO leadership_members (name, designation, bio, image_url, image_public_id, display_order, active)
 VALUES
     ('Er. Prasad S. Sangamad', 'Founder & Civil Engineer', 'Leads project planning, client coordination, and civil execution with a focus on quality, trust, and practical engineering.', 'https://res.cloudinary.com/demo/image/upload/abhinav-infratek/leadership/prasad-sangamad.png', 'abhinav-infratek/leadership/prasad-sangamad', 1, TRUE),
@@ -45,6 +57,7 @@ INSERT INTO site_settings (
     tagline,
     phone,
     alternate_phone,
+    whatsapp_number,
     email,
     address,
     hero_title,
@@ -65,6 +78,7 @@ VALUES
         'Engineers & Architects',
         '+91 72593 4720',
         '+91 91102 71018',
+        '+91 72593 4720',
         'prasadsangamad162@gmail.com',
         'Basavashree Nilaya, Vageesh Nagar 2nd Cross, Behind Adishakthi Temple, Medleri Road, Ranebennur - 581115, Haveri, Karnataka',
         'Modern construction shaped by engineering clarity.',

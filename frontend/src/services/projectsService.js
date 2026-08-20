@@ -22,8 +22,26 @@ function toProjectFormData(payload) {
   appendFormValue(formData, 'featured', payload.featured)
   appendFormValue(formData, 'active', payload.active)
 
+  if (payload.coverImage) {
+    formData.append('coverImage', payload.coverImage)
+  }
+
   if (payload.image) {
     formData.append('image', payload.image)
+  }
+
+  if (Array.isArray(payload.galleryImages)) {
+    payload.galleryImages.forEach((image) => {
+      if (image) {
+        formData.append('galleryImages', image)
+      }
+    })
+  }
+
+  if (Array.isArray(payload.removeImageIds)) {
+    payload.removeImageIds.forEach((imageId) => {
+      formData.append('removeImageIds', imageId)
+    })
   }
 
   return formData

@@ -1,15 +1,20 @@
 package com.abhinavinfratek.cms.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -62,6 +67,11 @@ public class Project {
     @Column(nullable = false)
     private Boolean active;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("displayOrder ASC")
+    private List<ProjectImage> images = new ArrayList<>();
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -90,5 +100,15 @@ public class Project {
     @PreUpdate
     void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public void addImage(ProjectImage image) {
+        images.add(image);
+        image.setProject(this);
+    }
+
+    public void removeImage(ProjectImage image) {
+        images.remove(image);
+        image.setProject(null);
     }
 }

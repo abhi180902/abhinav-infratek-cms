@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ProtectedRoute from '../components/auth/ProtectedRoute'
+import ScrollToTop from '../components/common/ScrollToTop'
 import AdminLayout from '../layouts/AdminLayout'
 import About from '../components/home/About'
 import ClientReviews from '../components/home/ClientReviews'
@@ -11,6 +12,7 @@ import LeadershipTeam from '../components/home/LeadershipTeam'
 import Navbar from '../components/layout/Navbar'
 import Projects from '../components/home/Projects'
 import Services from '../components/home/Services'
+import ProjectDetails from '../pages/ProjectDetails'
 import Dashboard from '../pages/admin/Dashboard'
 import Enquiries from '../pages/admin/Enquiries'
 import Account from '../pages/admin/Account'
@@ -117,7 +119,7 @@ function PublicWebsite() {
         <ClientReviews isLoading={isLoading} reviews={publicData.clientReviews} />
         <Contact isLoading={isLoading} settings={publicData.settings} />
       </main>
-      <Footer services={publicData.services} settings={publicData.settings} />
+      <Footer settings={publicData.settings} />
     </div>
   )
 }
@@ -134,37 +136,42 @@ function AdminLoginRoute() {
 
 export default function AppRoutes() {
   return (
-    <Routes>
-      <Route path="/" element={<PublicWebsite />} />
-      <Route path="/about" element={<PublicWebsite />} />
-      <Route path="/services" element={<PublicWebsite />} />
-      <Route path="/projects" element={<PublicWebsite />} />
-      <Route path="/contact" element={<PublicWebsite />} />
-      <Route path="/admin/login" element={<AdminLoginRoute />} />
-      <Route path="/admin/forgot-password" element={<Navigate to="/admin/login" replace />} />
-      <Route path="/admin/reset-password" element={<Navigate to="/admin/login" replace />} />
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute>
-            <AdminLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Navigate to="/admin/login" replace />} />
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="account" element={<Account />} />
-        <Route path="projects" element={<AdminProjects />} />
-        <Route path="services" element={<AdminServices />} />
-        <Route path="leadership" element={<Navigate to="/admin/leadership-team" replace />} />
-        <Route path="leadership-team" element={<AdminLeadershipTeam />} />
-        <Route path="reviews" element={<Navigate to="/admin/client-reviews" replace />} />
-        <Route path="client-reviews" element={<AdminClientReviews />} />
-        <Route path="enquiries" element={<Enquiries />} />
-        <Route path="settings" element={<Settings />} />
-      </Route>
-      <Route path="/admin/*" element={<Navigate to="/admin/login" replace />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<PublicWebsite />} />
+        <Route path="/about" element={<PublicWebsite />} />
+        <Route path="/services" element={<PublicWebsite />} />
+        <Route path="/projects" element={<PublicWebsite />} />
+        <Route path="/projects/:slug" element={<ProjectDetails />} />
+        <Route path="/leadership" element={<PublicWebsite />} />
+        <Route path="/contact" element={<PublicWebsite />} />
+        <Route path="/admin/login" element={<AdminLoginRoute />} />
+        <Route path="/admin/forgot-password" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/admin/reset-password" element={<Navigate to="/admin/login" replace />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="/admin/login" replace />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="account" element={<Account />} />
+          <Route path="projects" element={<AdminProjects />} />
+          <Route path="services" element={<AdminServices />} />
+          <Route path="leadership" element={<Navigate to="/admin/leadership-team" replace />} />
+          <Route path="leadership-team" element={<AdminLeadershipTeam />} />
+          <Route path="reviews" element={<Navigate to="/admin/client-reviews" replace />} />
+          <Route path="client-reviews" element={<AdminClientReviews />} />
+          <Route path="enquiries" element={<Enquiries />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+        <Route path="/admin/*" element={<Navigate to="/admin/login" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   )
 }
