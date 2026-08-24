@@ -26,7 +26,7 @@ public class MailServiceImpl implements MailService {
     private static final String COMPANY_TAGLINE = "Engineers & Architects";
     private static final String COMPANY_NOTIFICATION_SUBJECT = "New Website Enquiry - Abhinav Infratek";
     private static final String CUSTOMER_ACKNOWLEDGEMENT_SUBJECT = "Thank You for Contacting Abhinav Infratek";
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a", Locale.ENGLISH);
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
 
     private final WebClient resendWebClient;
     private final ResendProperties resendProperties;
@@ -173,8 +173,8 @@ public class MailServiceImpl implements MailService {
                 </p>
                 %s
                 <p style="margin:22px 0 0;color:#374151;font-size:16px;line-height:1.7;">
-                  Regards,<br>
-                  <strong style="color:#111827;">Abhinav Infratek</strong><br>
+                  Best Regards,<br>
+                  Abhinav Infratek<br>
                   Engineers & Architects
                 </p>
                 """.formatted(escape(enquiry.getName()), buildSummaryCard(enquiry));
@@ -283,7 +283,7 @@ public class MailServiceImpl implements MailService {
             return "";
         }
 
-        return enquiry.getCreatedAt().format(DATE_TIME_FORMATTER);
+        return enquiry.getCreatedAt().format(DATE_FORMATTER);
     }
 
     private String formatMultiline(String value) {

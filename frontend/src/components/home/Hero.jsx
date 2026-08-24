@@ -1,4 +1,4 @@
-import heroImage from '../../assets/images/hero.png'
+import heroBg from '../../assets/images/hero-bg.jpg'
 
 export default function Hero({ isLoading, settings }) {
   const scrollToSection = (target) => {
@@ -14,9 +14,12 @@ export default function Hero({ isLoading, settings }) {
 
   return (
     <section className="hero-section" id="top" aria-label="Abhinav Infratek introduction">
-      <picture className="hero-background">
-        <img src={heroImage} alt="Modern infrastructure project by Abhinav Infratek" />
-      </picture>
+      <div
+        className="hero-background"
+        role="img"
+        aria-label="Luxury modern villa exterior by Abhinav Infratek"
+        style={{ backgroundImage: `url(${heroBg})` }}
+      />
       <div className="hero-overlay" aria-hidden="true" />
 
       <div className="hero-content">
