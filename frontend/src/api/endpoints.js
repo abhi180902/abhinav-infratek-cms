@@ -11,7 +11,6 @@ export const API_ENDPOINTS = {
     leadershipTeam: '/api/admin/leadership',
     clientReviews: '/api/admin/client-reviews',
     enquiries: '/api/admin/enquiries',
-    siteSettings: '/api/admin/site-settings',
   },
   public: {
     projects: '/api/projects',
@@ -19,6 +18,5 @@ export const API_ENDPOINTS = {
     leadershipTeam: '/api/leadership',
     clientReviews: '/api/client-reviews',
     enquiries: '/api/enquiries',
-    siteSettings: '/api/site-settings',
   },
 }

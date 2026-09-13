@@ -3,7 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Footer from '../components/layout/Footer'
 import logo from '../assets/images/company-logo.png'
-import { getPublicProject, getPublicSiteSettings } from '../services/publicWebsiteService'
+import siteConfig from '../config/siteConfig'
+import { getPublicProject } from '../services/publicWebsiteService'
 
 function getProjectYear(project) {
   return project?.completionDate ? new Date(project.completionDate).getFullYear() : ''
@@ -15,7 +16,6 @@ export default function ProjectDetails() {
   const [isLoading, setIsLoading] = useState(true)
   const [project, setProject] = useState(null)
   const [selectedImageIndex, setSelectedImageIndex] = useState(null)
-  const [settings, setSettings] = useState(null)
   const touchStartX = useRef(null)
 
   const galleryImages = useMemo(() => {
@@ -63,9 +63,7 @@ export default function ProjectDetails() {
     setIsLoading(true)
 
     try {
-      const [projectData, settingsData] = await Promise.all([getPublicProject(slug), getPublicSiteSettings()])
-      setProject(projectData)
-      setSettings(settingsData)
+      setProject(await getPublicProject(slug))
     } catch (requestError) {
       setError(requestError.response?.data?.message || 'Unable to load project details.')
     } finally {
@@ -134,10 +132,10 @@ export default function ProjectDetails() {
             Back to Projects
           </Link>
           <Link className="project-details-brand" to="/" aria-label="Go to Abhinav Infratek home">
-            <img src={settings?.logoUrl || logo} alt={`${settings?.companyName || 'Abhinav Infratek'} logo`} />
+            <img src={siteConfig.logoUrl || logo} alt={`${siteConfig.companyName} logo`} />
             <span>
-              <strong>{settings?.companyName || 'Abhinav Infratek'}</strong>
-              <small>{settings?.tagline || 'Engineers & Architects'}</small>
+              <strong>{siteConfig.companyName}</strong>
+              <small>{siteConfig.tagline}</small>
             </span>
           </Link>
         </div>
@@ -214,7 +212,7 @@ export default function ProjectDetails() {
           </div>
         </section>
       </main>
-      <Footer settings={settings} />
+      <Footer settings={siteConfig} />
 
       {selectedImage ? (
         <div

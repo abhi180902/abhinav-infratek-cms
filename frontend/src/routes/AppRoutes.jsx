@@ -20,17 +20,17 @@ import Login from '../pages/auth/Login'
 import AdminProjects from '../pages/admin/Projects'
 import AdminServices from '../pages/admin/Services'
 import AdminLeadershipTeam from '../pages/admin/LeadershipTeam'
-import Settings from '../pages/admin/Settings'
 import AdminClientReviews from '../pages/admin/ClientReviews'
 import { getPublicWebsiteData } from '../services/publicWebsiteService'
 import { useAuth } from '../hooks/useAuth'
+import siteConfig from '../config/siteConfig'
 
 const emptyPublicData = {
   clientReviews: [],
   leadershipMembers: [],
   projects: [],
   services: [],
-  settings: null,
+  settings: siteConfig,
 }
 
 function extractErrorMessage(error) {
@@ -111,13 +111,13 @@ function PublicWebsite() {
             </button>
           </div>
         ) : null}
-        <Hero isLoading={isLoading} settings={publicData.settings} />
-        <About isLoading={isLoading} settings={publicData.settings} />
+        <Hero settings={publicData.settings} />
+        <About isLoading={false} settings={publicData.settings} />
         <Services isLoading={isLoading} services={publicData.services} />
         <Projects isLoading={isLoading} projects={publicData.projects} />
         <LeadershipTeam isLoading={isLoading} members={publicData.leadershipMembers} />
         <ClientReviews isLoading={isLoading} reviews={publicData.clientReviews} />
-        <Contact isLoading={isLoading} settings={publicData.settings} />
+        <Contact isLoading={false} settings={publicData.settings} />
       </main>
       <Footer settings={publicData.settings} />
     </div>
@@ -167,7 +167,6 @@ export default function AppRoutes() {
           <Route path="reviews" element={<Navigate to="/admin/client-reviews" replace />} />
           <Route path="client-reviews" element={<AdminClientReviews />} />
           <Route path="enquiries" element={<Enquiries />} />
-          <Route path="settings" element={<Settings />} />
         </Route>
         <Route path="/admin/*" element={<Navigate to="/admin/login" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />

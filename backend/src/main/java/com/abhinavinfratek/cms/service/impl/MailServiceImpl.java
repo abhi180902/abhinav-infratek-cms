@@ -2,10 +2,8 @@ package com.abhinavinfratek.cms.service.impl;
 
 import com.abhinavinfratek.cms.config.ResendProperties;
 import com.abhinavinfratek.cms.dto.ResendEmailRequest;
-import com.abhinavinfratek.cms.dto.SiteSettingsResponse;
 import com.abhinavinfratek.cms.entity.Enquiry;
 import com.abhinavinfratek.cms.service.MailService;
-import com.abhinavinfratek.cms.service.SiteSettingsService;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
@@ -24,20 +22,23 @@ public class MailServiceImpl implements MailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceImpl.class);
     private static final String COMPANY_TAGLINE = "Engineers & Architects";
+    private static final String COMPANY_PHONE = "+91 7259734720";
+    private static final String COMPANY_EMAIL = "info@abhinavinfratek.in";
+    private static final String COMPANY_MAPS_URL = "https://maps.app.goo.gl/E5tkmEBiNzWyb5pa9?g_st=aw";
+    private static final String COMPANY_LOGO_URL = "https://res.cloudinary.com/dqcignp81/image/upload/v1787937725/abhinav-infratek/site-settings/zekku5qwhoetmaqdlodq.png";
     private static final String COMPANY_NOTIFICATION_SUBJECT = "New Website Enquiry - Abhinav Infratek";
     private static final String CUSTOMER_ACKNOWLEDGEMENT_SUBJECT = "Thank You for Contacting Abhinav Infratek";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.ENGLISH);
 
     private final WebClient resendWebClient;
     private final ResendProperties resendProperties;
-    private final SiteSettingsService siteSettingsService;
 
     @Override
     public void sendCompanyNotification(Enquiry enquiry) {
         sendHtmlEmail(
                 resendProperties.companyEmail(),
                 COMPANY_NOTIFICATION_SUBJECT,
-                buildCompanyNotificationHtml(enquiry, getSettingsSafely()),
+                buildCompanyNotificationHtml(enquiry),
                 enquiry.getEmail()
         );
     }
@@ -51,7 +52,7 @@ public class MailServiceImpl implements MailService {
         sendHtmlEmail(
                 enquiry.getEmail(),
                 CUSTOMER_ACKNOWLEDGEMENT_SUBJECT,
-                buildCustomerAcknowledgementHtml(enquiry, getSettingsSafely()),
+                buildCustomerAcknowledgementHtml(enquiry),
                 null
         );
     }
@@ -127,15 +128,7 @@ public class MailServiceImpl implements MailService {
         return replyTo == null || replyTo.isBlank() ? null : replyTo.trim();
     }
 
-    private SiteSettingsResponse getSettingsSafely() {
-        try {
-            return siteSettingsService.getSettings();
-        } catch (RuntimeException exception) {
-            return null;
-        }
-    }
-
-    private String buildCompanyNotificationHtml(Enquiry enquiry, SiteSettingsResponse settings) {
+    private String buildCompanyNotificationHtml(Enquiry enquiry) {
         String content = """
                 <p style="margin:0 0 18px;color:#374151;font-size:16px;line-height:1.6;">
                   A new enquiry has been submitted through the company website.
@@ -156,12 +149,11 @@ public class MailServiceImpl implements MailService {
         return buildEmailLayout(
                 "ABHINAV INFRATEK",
                 COMPANY_TAGLINE,
-                content,
-                settings
+                content
         );
     }
 
-    private String buildCustomerAcknowledgementHtml(Enquiry enquiry, SiteSettingsResponse settings) {
+    private String buildCustomerAcknowledgementHtml(Enquiry enquiry) {
         String content = """
                 <p style="margin:0 0 12px;color:#374151;font-size:16px;line-height:1.6;">Dear %s,</p>
                 <p style="margin:0 0 18px;color:#374151;font-size:16px;line-height:1.6;">
@@ -179,16 +171,14 @@ public class MailServiceImpl implements MailService {
                 </p>
                 """.formatted(escape(enquiry.getName()), buildSummaryCard(enquiry));
 
-        return buildEmailLayout("Thank You!", "We received your enquiry", content, settings);
+        return buildEmailLayout("Thank You!", "We received your enquiry", content);
     }
 
-    private String buildEmailLayout(String title, String subtitle, String content, SiteSettingsResponse settings) {
-        String contactFooter = buildContactFooter(settings);
-        String logo = settings != null && settings.getLogoUrl() != null && !settings.getLogoUrl().isBlank()
-                ? """
+    private String buildEmailLayout(String title, String subtitle, String content) {
+        String contactFooter = buildContactFooter();
+        String logo = """
                 <img src="%s" alt="Abhinav Infratek logo" width="72" style="display:block;margin:0 auto 12px;border-radius:50%%;background:#ffffff;">
-                """.formatted(escape(settings.getLogoUrl()))
-                : "";
+                """.formatted(escape(COMPANY_LOGO_URL));
 
         return """
                 <!doctype html>
@@ -258,15 +248,11 @@ public class MailServiceImpl implements MailService {
         );
     }
 
-    private String buildContactFooter(SiteSettingsResponse settings) {
-        if (settings == null) {
-            return "";
-        }
-
+    private String buildContactFooter() {
         StringBuilder builder = new StringBuilder();
-        appendFooterLine(builder, settings.getPhone());
-        appendFooterLine(builder, settings.getEmail());
-        appendFooterLine(builder, settings.getGoogleMapsEmbedUrl());
+        appendFooterLine(builder, COMPANY_PHONE);
+        appendFooterLine(builder, COMPANY_EMAIL);
+        appendFooterLine(builder, COMPANY_MAPS_URL);
         return builder.toString();
     }
 

@@ -1,6 +1,6 @@
 import heroBg from '../../assets/images/hero-bg.jpg'
 
-export default function Hero({ isLoading, settings }) {
+export default function Hero({ settings }) {
   const scrollToSection = (target) => {
     const section = document.getElementById(target)
     if (section) {
@@ -25,8 +25,8 @@ export default function Hero({ isLoading, settings }) {
       <div className="hero-content">
         <div className="container">
           <div className="hero-copy">
-            <p className="hero-kicker">{isLoading ? 'Loading company information...' : ''}</p>
-            <h1 className="hero-title">{isLoading ? 'Loading website content...' : heroTitle}</h1>
+            <p className="hero-kicker">{settings?.tagline || 'Engineers & Architects'}</p>
+            <h1 className="hero-title">{heroTitle}</h1>
             {heroSubtitle ? <p className="hero-subtitle">{heroSubtitle}</p> : null}
             <div className="hero-actions" aria-label="Hero actions">
               <button className="site-button site-button--light" type="button" onClick={() => scrollToSection('projects')}>

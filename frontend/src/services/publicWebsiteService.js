@@ -6,10 +6,6 @@ async function readPublicEndpoint(endpoint) {
   return response.data
 }
 
-export async function getPublicSiteSettings() {
-  return readPublicEndpoint(API_ENDPOINTS.public.siteSettings)
-}
-
 export async function getPublicServices() {
   return readPublicEndpoint(API_ENDPOINTS.public.services)
 }
@@ -37,14 +33,13 @@ export async function submitPublicEnquiry(payload) {
 
 export async function getPublicWebsiteData() {
   const entries = await Promise.allSettled([
-    getPublicSiteSettings(),
     getPublicServices(),
     getPublicProjects(),
     getPublicLeadershipMembers(),
     getPublicClientReviews(),
   ])
 
-  const keys = ['settings', 'services', 'projects', 'leadershipMembers', 'clientReviews']
+  const keys = ['services', 'projects', 'leadershipMembers', 'clientReviews']
 
   return entries.reduce(
     (result, entry, index) => {

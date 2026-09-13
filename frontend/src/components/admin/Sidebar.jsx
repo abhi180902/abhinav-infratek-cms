@@ -1,13 +1,9 @@
 import {
-  Bell,
   FolderKanban,
   Grid2X2,
-  Home,
   LogOut,
   Mail,
   MessageSquareQuote,
-  Settings,
-  SlidersHorizontal,
   UserRound,
   UsersRound,
   Wrench,
@@ -35,14 +31,8 @@ const menuSections = [
     items: [{ label: 'Enquiries', helper: 'Contact form submissions', to: '/admin/enquiries', icon: Mail }],
   },
   {
-    title: 'Site Settings',
-    items: [
-      { label: 'Homepage Sections', helper: 'Manage visible sections', to: '/admin/settings', icon: Home },
-      { label: 'General Settings', helper: 'Contact and company info', to: '/admin/settings', icon: Settings },
-      { label: 'My Account', helper: 'Profile and password', to: '/admin/account', icon: UserRound },
-      { label: 'Announcements', helper: 'Future notices', to: '/admin/settings', icon: Bell },
-      { label: 'Display Controls', helper: 'Future visibility options', to: '/admin/settings', icon: SlidersHorizontal },
-    ],
+    title: 'Account',
+    items: [{ label: 'My Account', helper: 'Profile and password', to: '/admin/account', icon: UserRound }],
   },
 ]
 
